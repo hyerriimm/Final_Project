@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { KAKAO_AUTH_URL } from "../../../shared/OAuth";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const Login = () => {
         if (data.data.success === true) {
             localStorage.setItem("ACCESSTOKEN", data.headers.authorization);
             localStorage.setItem("REFRESHTOKEN", data.headers.refreshtoken);
+            localStorage.setItem("ImgURL", data.headers.imgurl);
             alert(data.data.data);
             return navigate('/');
         };
@@ -30,7 +32,11 @@ const Login = () => {
             alert(data.data.error.message);
             if (data.data.error.code === 'INVALID_ID') {
                 userIdRef.current.focus();
-            } else {passwordRef.current.focus();}
+                passwordRef.current.value = '';
+            } else {
+              passwordRef.current.focus();
+              passwordRef.current.value = '';
+            }
             return
         };
     } catch (error) {
@@ -44,11 +50,13 @@ const Login = () => {
         <input 
         ref={userIdRef}
         type='email'
-        placeholder='이메일을 입력하세요.'
+        name='userId'
+        placeholder='example@gmail.com'
         />
         <input 
         ref={passwordRef}
         type='password'
+        name='password'
         placeholder='비밀번호를 입력하세요.' 
         />
         <StButton
@@ -65,7 +73,7 @@ const Login = () => {
         <KakaoLogin
         src='img/kakao_login_medium_wide.png'
         alt='카카오 로그인 버튼'
-        // onClick={()=>{window.location.href = KAKAO_AUTH_URL}}
+        onClick={()=>{window.location.href = KAKAO_AUTH_URL}}
         />
       </Item1>
       <Item2>
