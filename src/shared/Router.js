@@ -21,7 +21,7 @@ const Router = () => {
           <Route path='/' element={<MainPg />}/>
           <Route path='signup' element={<SignupPg />}/>
           <Route path='login' element={<LoginPg />}/>
-          <Route path='/kakao' element={<KaKao />} />
+          <Route path='/oauth/kakao' element={<KaKao />} /> {/* 리다이렉트 되는 화면 */}
           <Route path='/detail/:id' element={<DetailPg />}/>
           <Route path='/detail/:id/apply' element={<ApplyFormPg />}/>
           <Route path='/detail/:id/check' element={<ApplyCheckPg />}/>
