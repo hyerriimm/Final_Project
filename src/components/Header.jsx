@@ -1,39 +1,59 @@
-import React from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+// import Dropdown from '../components/Dropdown'
+// import useDetectClose from "../hooks/useDetectClose";
 
 const Header = () => {
     const navigate = useNavigate();
+    const [accesstoken,setAccesstoken] = useState(undefined);
+    const [profileImg,setProfileImg] = useState(undefined);
+    // const [isOpen, setIsOpen, ref, removeHandler] = useDetectClose(false);
+
+    const profile = `${profileImg}` // "https://avatars.dicebear.com/api/adventurer-neutral/:seed.svg"
+
+    useEffect(()=>{
+      const timeout = setTimeout(()=>{
+        setAccesstoken(localStorage.getItem("ACCESSTOKEN"));
+    },1000);
+      return ()=>{clearTimeout(timeout);}
+    },[window.location.href, accesstoken, navigate]);
+
+    useEffect(()=>{
+      setAccesstoken(localStorage.getItem("ACCESSTOKEN"));
+      setProfileImg(localStorage.getItem("ImgURL"));
+    });
+
     
-    const profile = "https://avatars.dicebear.com/api/adventurer-neutral/:seed.svg"
-
-
+    
     return (
+        <>
         <HdContainer>
             <Logo onClick={()=>navigate('/')}>3355</Logo>
             <BtnWrapper>            
-                    <Btn onClick={()=>navigate('/form')}>모임등록</Btn>
+                    {/* <Btn onClick={()=>navigate('/form')}>모임등록</Btn>
                     <BtnProfile>
                       <img src={ profile } alt="profile"/>
                     </BtnProfile>
-                    <Btn onClick={()=>navigate('/login')}>로그인</Btn>
-                {
-                // accesstoken || kakaoAccesstoken ? 
-                // (
-                //   <>
-                //     <Btn>모임등록</Btn>
-                //     <Btn>MYPAGE</Btn>
-                //   </>
-                // )
-                // :
-                // (
-                //   <>
-                //   <Btn>로그인</Btn>
-                // </>
-                // )
-              }
+                    <Btn onClick={()=>navigate('/login')}>로그인</Btn> */}
+                { accesstoken ? 
+                ( <>
+                  <Btn onClick={()=>navigate('/form')}>모임등록</Btn>
+                  <BtnProfile>
+                      <img src={ profile } alt="profile"/>
+                  </BtnProfile>
+                  </>
+                )
+                :
+                ( <><Btn onClick={()=>navigate('/login')}>로그인</Btn></>
+                )}
             </BtnWrapper>
         </HdContainer>
+        <Menu>
+          <div onClick={()=>navigate('/mypage')}>마이페이지</div>
+          <div>로그아웃</div>
+        </Menu>
+        </>
     );
 };
 
@@ -72,8 +92,8 @@ const Btn = styled.div`
   cursor: pointer;
 `
 const BtnProfile = styled.div`
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   border-radius: 100%;
   margin: 0 30px 0 0;
   text-align: center;
@@ -86,4 +106,16 @@ const BtnProfile = styled.div`
           height: 100%;
           border-radius: 100%;          
       }
+`
+const Menu = styled.div`
+    background: #fff;
+    border-radius: 8px;
+    position: absolute;
+    top: 50px;
+    right: 25px;
+    width: 150px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
 `
