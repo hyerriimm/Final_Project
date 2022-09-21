@@ -24,7 +24,6 @@ const Login = () => {
         if (data.data.success === true) {
             localStorage.setItem("ACCESSTOKEN", data.headers.authorization);
             localStorage.setItem("REFRESHTOKEN", data.headers.refreshtoken);
-            localStorage.setItem("ImgURL", data.headers.imgurl);
             alert(data.data.data);
             return navigate('/');
         };
