@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import DatePicker from "react-datepicker";
@@ -6,45 +6,53 @@ import DatePicker from "react-datepicker";
 const Form = () => {
   const navigate = useNavigate();
 
-  const [user_name, setUser_Name] = useState(localStorage.getItem('name'));
-  const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
-  const [image, setImage] = useState(null); //용태매니저님이 null넣으라고 했음
-  const [preview, setPreview] = useState("");
-  const [sayMe, setSayMe] = useState("");
+  const [address, setAddress] = useState("");
   const [content, setContent] = useState("");
+  const [maxNum, setMaxNum] = useState(""); 
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [dDay, setDday] = useState("");
+  const [imgFile, setImgFile] = useState(null);
 
-  const resetStates = () => {
-    setUser_Name("");
-    setDate("");
-    setTitle("");
-    setImage(null); //용태매니저님이 null넣으라고 했음
-    setPreview("");
-    setSayMe("");
-    setContent("");
+  const resetAllStates = () => {
+    setTitle('');
+    setAddress('');
+    setContent('');
+    setMaxNum('');
+    setStartDate('');
+    setEndDate('');
+    setDday('');
+    setImgFile(null);
   };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (date.trim() === '' ||
-        image === null ||
-        sayMe.trim() === '' ||
-        content.trim() === ''
+    if (title.trim() === '' ||
+        address.trim() === '' ||
+        content.trim() === '' ||
+        maxNum.trim() === '' ||
+        startDate.trim() === '' ||
+        endDate.trim() === '' ||
+        dDay.trim() === '' ||
+        imgFile === null
     ) {
-      return alert('모든항목을 입력하고 일기를 추가해주세요!')
+      return alert('모든항목을 입력해야 등록 가능합니다.')
     }
     const formData = new FormData();
-    formData.append('user_name', user_name);
-    formData.append('date', date);
     formData.append('title', title);
-    formData.append('image', image);
-    formData.append('sayMe', sayMe);
+    formData.append('address', address);
     formData.append('content', content);
+    formData.append('maxNum', maxNum);
+    formData.append('startDate', startDate);
+    formData.append('endDate', endDate);
+    formData.append('dDay', dDay);
+    formData.append('imgFile', imgFile);
 
     // dispatch(__createPosts(formData));
 
     navigate('/');
-    resetStates();
+    resetAllStates();
   };
 
   return (
