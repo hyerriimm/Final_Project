@@ -13,7 +13,7 @@ const Kakao = () => {
   // let 변수명 = new URL(window.location.href).searchParams.get('code')
   // URL 안에 search 파라미터에 들어있는 'code'라는 값을 get 하겠다.
   // '변수명'이라는 변수 안에 인가 코드 정보가 담기게 된다.
-  console.log(code);
+  // console.log(code);
 
   useEffect(() => {
     kakaologin(code);
@@ -21,15 +21,16 @@ const Kakao = () => {
 
   const kakaologin = async (_code) => {
     try {
-      const response = await axios.get(`http://13.125.229.126:8080/api/member/kakao?code=${_code}`); 
+      const response = await axios.get(`http://13.125.229.126:8080/oauth/kakao?code=${_code}`); 
       //백엔드로 인가코드 보내고 우리 사이트 전용 토큰 발급받기
 
-      localStorage.setItem('ACCESS_TOKEN', response.headers.authorization);
-      localStorage.setItem('REFRESH_TOKEN', response.headers.refreshtoken);
+      localStorage.setItem('ACCESSTOKEN', response.headers.authorization);
+      localStorage.setItem('REFRESHTOKEN', response.headers.refreshtoken);
+      localStorage.setItem("ImgURL", response.headers.imgurl);
       console.log(response);
 
       if(response.data.success === true) {
-        alert('카카오로 로그인 되었습니다.');
+        alert(`카카오 로그인: ${response.data.data}`);
         return navigate('/');
       }
     } catch (error) {
