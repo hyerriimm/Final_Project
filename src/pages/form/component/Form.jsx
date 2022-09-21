@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import DatePicker from "react-datepicker";
@@ -9,7 +9,7 @@ const Form = () => {
   const [user_name, setUser_Name] = useState(localStorage.getItem('name'));
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
-  const [image, setImage] = useState(null); //용태매니저님이 null넣으라고 했음
+  const [image, setImage] = useState(null); 
   const [preview, setPreview] = useState("");
   const [sayMe, setSayMe] = useState("");
   const [content, setContent] = useState("");
@@ -18,7 +18,7 @@ const Form = () => {
     setUser_Name("");
     setDate("");
     setTitle("");
-    setImage(null); //용태매니저님이 null넣으라고 했음
+    setImage(null);
     setPreview("");
     setSayMe("");
     setContent("");
