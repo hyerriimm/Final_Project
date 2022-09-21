@@ -11,35 +11,44 @@ const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [user, setUser] = useState({
-    userId: "",
-    password: "",
-    passwordCheck: "",
-    nickname: "",
-    imgFile: "",
-  });
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [nickname, setNickname] = useState("");
+  
+  //이미지
+  const [previewImg, setPreviewImg] = useState();
+  const [imgFile, setImgFile] = useState(null);
+  const fileInput = useRef(null); 
+  const onChange = (e) => {
+    // if (e.target.files[0]) {
+    // setFile(e.target.files[0]);
+    // } else { // //업로드 취소할 시
+    // setImage(profileImg);
+    // return;
+    // } //화면에 프로필 사진 표시
+    setImgFile(e.target.files[0]);
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+          setPreviewImg(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
 
+  const resetAllStates = () => {
+    setUserId("");
+    setPassword("");
+    setPasswordCheck("");
+    setNickname("");
+    setImgFile(null);
+    setPreviewImg("");
+};
 
 //const regexuserId =  /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
-const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
-
-  const onChangeUserId = (e) => {
-    setUser({ ...user, userId: e.target.value });
-  };
-
-  const onChangePassWord = (e) => {
-    setUser({ ...user, password: e.target.value });
-  };
-
-  const onChangePassWordCheck = (e) => {
-    setUser({ ...user, passwordCheck: e.target.value });
-  };
-
-  const onChangeNickName = (e) => {
-    setUser({ ...user, nickname: e.target.value });
-  };
-  
-
+// const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+const regexPassword = /^(?=.*?[a-zA-z])(?=.*?[0-9]).{4,12}$/;
 
 
   //체크박스 전체 선택 및 해제
@@ -82,20 +91,29 @@ const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%
         }
     },[clicker])
 
-    
-    //이미지
-    const [Image, setImage] = useState();
-    const fileInput = useRef(null); const onChange = (e) => {
-        // if (e.target.files[0]) {
-        // setFile(e.target.files[0]);
-        // } else { // //업로드 취소할 시
-        // setImage(profileImg);
-        // return;
-        // } //화면에 프로필 사진 표시
-    const reader = new FileReader();
-    reader.onload = () => { if (reader.readyState === 2)
-        { setImage(reader.result); } };
-    reader.readAsDataURL(e.target.files[0]); };
+
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+        if (userId.trim() === '' || 
+            password.trim() === '' || 
+            passwordCheck.trim() === '' ||
+            nickname.trim() === ''
+            ) {
+                return alert('모든 항목을 입력해야 회원가입이 가능합니다.')
+            }
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('password', password);
+        formData.append('passwordCheck', passwordCheck);
+        formData.append('nickname', nickname);
+        if (imgFile !== null) {
+            formData.append('imgFile', imgFile);
+        };
+
+        dispatch(signUp(formData));
+        navigate('/');
+        resetAllStates();
+    };
 
 
   return (
@@ -103,96 +121,103 @@ const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%
         <Stcontainer>
         <StTitle>회원가입</StTitle>
 
-        <>
-            <Input 
-                placeholder='이메일을 입력하세요'
-                type="email"
-                name="userId"
-                onChange={onChangeUserId}/>
-                
-            <Input  
-                placeholder='비밀번호를 입력하세요'
-                type="password"
-                name="password"
-                onChange={onChangePassWord}/>
-                {
-                  user.password && (regexPassword.test(user.password)
-                  ? <div style={{color:"green", fontSize:"8px"}}>사용가능한 비밀번호 입니다</div>
-                  : <div style={{color:"red", fontSize:"8px"}}>영문, 숫자, 특수문자를 사용하여 8~16자리 비밀번호를 입력해주세요</div>)
-                }
+        <form onSubmit={onSubmitHandler}
+        style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+            <>
+                <Input 
+                    placeholder='example@gmail.com'
+                    type="email"
+                    name="userId"
+                    onChange={(e)=>setUserId(e.target.value)}/>
+                    
+                <Input  
+                    placeholder='비밀번호를 입력하세요'
+                    type="password"
+                    name="password"
+                    onChange={(e)=>setPassword(e.target.value)}/>
+                    {
+                    password && (regexPassword.test(password)
+                    ? <div style={{color:"green", fontSize:"8px"}}>사용가능한 비밀번호 입니다</div>
+                    : 
+                    <div style={{color:"red", fontSize:"8px"}}>영문, 숫자를 포함하여 4~12자리 비밀번호를 입력해주세요</div>
+                    // <div style={{color:"red", fontSize:"8px"}}>영문, 숫자, 특수문자를 사용하여 8~16자리 비밀번호를 입력해주세요</div>
+                    )
+                    }
 
-            <Input  
-                placeholder='비밀번호를 다시 한번 입력하세요'
-                type="password"
-                name="passwordCheck"
-                onChange={onChangePassWordCheck}/>
-                {
-                   user.passwordCheck && (user.password !== user.passwordCheck
-                   ? <div style={{color:"red", fontSize:"8px"}}>비밀번호가 일치하지 않습니다</div>
-                   : <div style={{color:"green", fontSize:"8px"}}>비밀번호가 일치합니다</div>)
-                }
+                <Input  
+                    placeholder='비밀번호를 다시 한번 입력하세요'
+                    type="password"
+                    name="passwordCheck"
+                    onChange={(e)=>setPasswordCheck(e.target.value)}/>
+                    {
+                    passwordCheck && (password !== passwordCheck
+                    ? <div style={{color:"red", fontSize:"8px"}}>비밀번호가 일치하지 않습니다</div>
+                    : <div style={{color:"green", fontSize:"8px"}}>비밀번호가 일치합니다</div>)
+                    }
 
-            <Input  
-                placeholder='닉네임을 입력하세요'
-                type="text"
-                name="nickname"
-                onChange={onChangeNickName}/>
+                <Input  
+                    placeholder='닉네임을 입력하세요'
+                    type="text"
+                    name="nickname"
+                    onChange={(e)=>setNickname(e.target.value)}/>
 
-           <ImgFile
-                src={Image}
-                onClick={() => { fileInput.current.click(); }}
-                alt="" />
-           
-            <ImgInput
-                type="file"
-                style={{ display: "none" }}
-                accept="image/*"
-                name="imgFile"
-                onChange={onChange}
-                ref={fileInput} />
+            <ImgFile
+                    src={previewImg}
+                    alt="" />
+            
+                <ImgInput
+                    type="file"
+                    style={{ display: "none" }}
+                    accept="image/*"
+                    name="imgFile"
+                    onChange={onChange}
+                    ref={fileInput} />
 
 
-            <Button
-                  style={{backgroundColor:'#DC781B'}}
-                  onClick={() => {navigate()}}>사진등록</Button>
-        </>
+                <Button
+                    type='button'
+                    style={{backgroundColor:'#DC781B'}}
+                    onClick={() => { fileInput.current.click(); }}>
+                        사진등록</Button>
+            </>
 
-        <>
-         <StTitle>이용약관</StTitle>
-         <AgreeBox>
-            <input 
-                type="checkbox"
-                name="one"
-                checked={inputs[0].checked} onChange={(e)=>{checkboxHandler(e)}}
-                /> 모두 동의합니다
-                <br/>
+            <>
+            <StTitle>이용약관</StTitle>
+            <AgreeBox>
+                <input 
+                    type="checkbox"
+                    name="one"
+                    checked={inputs[0].checked} onChange={(e)=>{checkboxHandler(e)}}
+                    /> 모두 동의합니다
+                    <br/>
 
-            <input 
-                type="checkbox"
-                name="two"
-                onChange={(e)=>{checkboxHandler(e);}} checked={inputs[1].checked}
-                /> 서비스 약관 동의(필수)
-                <br/>
+                <input 
+                    type="checkbox"
+                    name="two"
+                    onChange={(e)=>{checkboxHandler(e);}} checked={inputs[1].checked}
+                    /> 서비스 약관 동의(필수)
+                    <br/>
 
-            <input
-                type="checkbox"
-                name="three"
-                onChange={(e)=>{checkboxHandler(e);}} checked={inputs[2].checked}
-                /> 개인정보 수집 및 이용 동의(필수)
-                <br/>
+                <input
+                    type="checkbox"
+                    name="three"
+                    onChange={(e)=>{checkboxHandler(e);}} checked={inputs[2].checked}
+                    /> 개인정보 수집 및 이용 동의(필수)
+                    <br/>
 
-            <input 
-                type="checkbox"
-                name="four"
-                onChange={(e)=>{checkboxHandler(e);}} checked={inputs[3].checked}
-                /> 마케팅 정보 수신 동의(선택)
+                <input 
+                    type="checkbox"
+                    name="four"
+                    onChange={(e)=>{checkboxHandler(e);}} checked={inputs[3].checked}
+                    /> 마케팅 정보 수신 동의(선택)
 
-         </AgreeBox>
-        </>
+            </AgreeBox>
+            </>
 
-            <Button
-                onClick={()=>{dispatch(signUp(user))}}
-                style={{backgroundColor:'#038E00'}}>회원가입</Button>
+                <Button
+                    type='submit'
+                    style={{backgroundColor:'#038E00'}}>가입하기</Button>
+        </form>
 
         </Stcontainer>
     </LoginLayout> 
