@@ -38,6 +38,7 @@ const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%
   const onChangeNickName = (e) => {
     setUser({ ...user, nickname: e.target.value });
   };
+  
 
 
 
@@ -109,7 +110,6 @@ const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%
                 name="userId"
                 onChange={onChangeUserId}/>
                 
-
             <Input  
                 placeholder='비밀번호를 입력하세요'
                 type="password"
