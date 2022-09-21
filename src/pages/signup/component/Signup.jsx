@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { signUp } from "../../../redux/modules/user";
 
 
@@ -19,25 +20,29 @@ const Signup = () => {
     imgFile: "",
   });
 
+    //const userIdList = useSelector(state => state.users.users)
 
-//const regexuserId =  /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
-const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+    // const idx = userIdList.filter((e)=> e.userId == user.userId)
+    //const regexuserId =  /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
+    const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
 
-  const onChangeUserId = (e) => {
-    setUser({ ...user, userId: e.target.value });
-  };
 
-  const onChangePassWord = (e) => {
-    setUser({ ...user, password: e.target.value });
-  };
 
-  const onChangePassWordCheck = (e) => {
-    setUser({ ...user, passwordCheck: e.target.value });
-  };
+    const onChangeUserId = (e) => {
+        setUser({ ...user, userId: e.target.value });
+    };
 
-  const onChangeNickName = (e) => {
-    setUser({ ...user, nickname: e.target.value });
-  };
+    const onChangePassWord = (e) => {
+        setUser({ ...user, password: e.target.value });
+    };
+
+    const onChangePassWordCheck = (e) => {
+        setUser({ ...user, passwordCheck: e.target.value });
+    };
+
+    const onChangeNickName = (e) => {
+        setUser({ ...user, nickname: e.target.value });
+    };
   
 
 
@@ -109,7 +114,12 @@ const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%
                 type="email"
                 name="userId"
                 onChange={onChangeUserId}/>
-                
+                  
+                     {/* { user.name && (idx.length === 0  ? (regexuserId.test(user.name)
+                     ? <div style={{color:"green", fontSize:"8px"}}>사용가능한 이메일입니다</div>
+                     : <div style={{color:"red", fontSize:"8px"}}>이메일을 확인해주세요</div>)
+                     : <div style={{color:"red", fontSize:"8px"}}>이미 있는 이메일입니다.</div>)} */}
+
             <Input  
                 placeholder='비밀번호를 입력하세요'
                 type="password"
