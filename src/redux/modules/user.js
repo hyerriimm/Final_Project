@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
 import { createSlice } from "@reduxjs/toolkit";
 
-const API_URL = 'http://13.125.229.126';
+const API_URL = 'http://13.125.229.126:8080';
 
 //회원가입
 export const signUp = createAsyncThunk(
@@ -10,8 +10,12 @@ export const signUp = createAsyncThunk(
     async (payload, thunkAPI) => { 
         try {
             console.log(payload)
-            const data = await axios.post(`${API_URL}/member/signup`, payload)
-            console.log(data.data)
+            const data = await axios.post(`${API_URL}/member/signup`, payload, {
+              headers: {
+                "Content-Type":"multipart/form-data"
+              }
+            });
+            console.log(data.data);
             if(data.data.success === false)
               alert(data.data.error.message)
               else alert(data.data.data)
@@ -35,5 +39,21 @@ export const user = createSlice({
     }
 }
 );
+
+
+export const _getUsersName = createAsyncThunk(
+  "getUsersName",
+  async (payload, thunkAPI) => {
+    // console.log(payload)
+    try {
+      const data = await axios.get('${API_URL}');
+      // console.log(data.data.data)
+      return thunkAPI.fulfillWithValue(data.data.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 
 export default user.reducer;

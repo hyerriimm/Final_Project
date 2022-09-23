@@ -21,10 +21,10 @@ const Router = () => {
           <Route path='/' element={<MainPg />}/>
           <Route path='signup' element={<SignupPg />}/>
           <Route path='login' element={<LoginPg />}/>
-          <Route path='/kakao' element={<KaKao />} />
+          <Route path='/oauth/kakao' element={<KaKao />} /> {/* 리다이렉트 되는 화면 */}
           <Route path='/detail/:id' element={<DetailPg />}/>
           <Route path='/detail/:id/apply' element={<ApplyFormPg />}/>
-          <Route path='/detail/:id/check' element={<ApplyCheckPg />}/>
+          <Route path='/detail' element={<ApplyCheckPg />}/> {/*/detail/:id/check */}
           <Route path='form' element={<FormPg />}/>
           <Route path='mypage' element={<MypagePg />}/>
           <Route path='/mypage/infoedit' element={<MyInfoEditPg />}/>
@@ -32,6 +32,7 @@ const Router = () => {
           <Route path='/mypage/activity' element={<MyActivityPg />}/>
           <Route path='/chatlist' element={<ChatListPg />}/>
           <Route path='/chatlist/:id' element={<ChatDetailPg />}/>
+          <Route path="*" element={<div>404 error 없는페이지입니다</div>} />
         </Routes>
       </BrowserRouter>
     );
