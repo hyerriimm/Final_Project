@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^13.2.1",
     "@y0c/react-datepicker": "^1.0.4",
     "axios": "^0.27.2",
+    "moment": "^2.29.4",
+    "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",

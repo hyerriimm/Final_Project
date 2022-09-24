@@ -111,7 +111,7 @@ const regexPassword = /^(?=.*?[a-zA-z])(?=.*?[0-9]).{4,12}$/;
         };
 
         dispatch(signUp(formData));
-        navigate('/');
+        navigate('/login');
         resetAllStates();
     };
 
