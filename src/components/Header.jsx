@@ -88,7 +88,7 @@ const Header = () => {
 export default Header;
 
 const HdContainer = styled.div`
-    background-color: #ECE8E5;
+    background-color: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -117,6 +117,8 @@ const Btn = styled.div`
   margin: 0 30px 0 0;
   text-align: center;
   font-size: 14px;
+  font-family: 'NotoSansKR';
+  font-weight: 600;
   cursor: pointer;
 `
 const BtnProfile = styled.div`
@@ -126,13 +128,16 @@ const BtnProfile = styled.div`
   margin: 0 30px 0 0;
   text-align: center;
   font-size: 14px;
-  border: 0.3px solid #B3A394;
+  border: 2.5px solid #42A5F5;
   cursor: pointer;
+  :hover {
+            filter: brightness(110%);
+         }          
 
       img {
           width: 100%;
           height: 100%;
-          border-radius: 100%;          
+          border-radius: 100%;
       }
 `
 
