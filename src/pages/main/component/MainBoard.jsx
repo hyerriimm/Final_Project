@@ -47,11 +47,23 @@ export default MainBoard;
 
 const ListContainer = styled.div`
     display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    margin-top: 10px;
+    margin: 10px 15px 20px 15px;
+
+  @media only screen and (max-width: 720px) {
+    flex-direction: column;
+    align-items: center;
     
+  }
+
+  @media only screen and (min-width: 720px) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100vw;
+    /* max-width: 1000px; */
+    justify-content: center;
+  }
+
 
 `
 
@@ -59,17 +71,18 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   border: 0.5px solid #E3F2FD;
-  width: 70vw;
+  width: 100%;
   min-width: 300px;
   max-width: 380px;
   border-radius: 6px;
   padding: 5px;
   box-shadow: 0.5px 0.5px 1px 0 #cce0ff;
+  margin: 10px;
   cursor: pointer;
   :hover {
             filter: brightness(90%);
             box-shadow: 1px 1px 3px 0 #bcd7ff;
-         }
+  }
 
 `;
 
@@ -80,6 +93,7 @@ const ImageContainer = styled.div`
     img {
         display: flex;
         width: 100%;
+        height: 243px ;
         object-fit: cover;
         border-radius: 6px;
     }

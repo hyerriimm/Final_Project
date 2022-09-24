@@ -8,7 +8,7 @@ export const __cardlist = createAsyncThunk(
     "/post", 
     async (payload, thunkAPI) => { 
         try {
-            const data = await axios.get(`${API_URL}/post`, {
+            const data = await axios.get(`${API_URL}/post/all`, {
               headers: {
                 authorization: localStorage.getItem("ACCESSTOKEN"),
                 refreshtoken: localStorage.getItem("REFRESHTOKEN")
