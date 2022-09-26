@@ -19,8 +19,9 @@ const MainBoard = () => {
 
   return (
     <>
+      <Container>
       <ListContainer>
-        {list.map((list) => {
+        {list.slice().reverse().map((list) => {
           return ( 
             <CardWrapper key={list.id} onClick={() => { navigate(`/detail/${list.id}`) }}>
               <ImageContainer>
@@ -38,6 +39,7 @@ const MainBoard = () => {
           );
           })}
       </ListContainer>
+      </Container>
     </>
   )
 }
@@ -45,23 +47,40 @@ const MainBoard = () => {
 export default MainBoard;
 
 
-const ListContainer = styled.div`
+const Container = styled.div`
     display: flex;
-    margin: 10px 15px 20px 15px;
-
-  @media only screen and (max-width: 720px) {
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    /* background-color: antiquewhite; */
+    /* border: 1px solid black; */
     
+`
+
+const ListContainer = styled.div`
+    /* display: flex; */
+    /* margin: 10px 15px 20px 15px; */
+    /* border: 1px solid black; */
+
+  @media only screen and (max-width: 854px) {
+    flex-direction: column;
+    align-items: center;    
   }
 
-  @media only screen and (min-width: 720px) {
+  @media only screen and (min-width: 854px) {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 100vw;
+    width: 824px;
     /* max-width: 1000px; */
-    justify-content: center;
+    /* justify-content: center; */
+  }
+
+  @media only screen and (min-width: 1240px) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 1240px;
+    /* max-width: 1000px; */
+    /* justify-content: center; */
   }
 
 
