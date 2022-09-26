@@ -48,6 +48,7 @@ const Header = () => {
         setAccesstoken(localStorage.removeItem("ACCESSTOKEN"));
         setAccesstoken(localStorage.removeItem("REFRESHTOKEN"));
         setProfileImg(localStorage.removeItem("ImgURL"));
+        localStorage.removeItem("Id");
         alert('로그아웃 되었습니다.')
         navigate("/");
       } else {
