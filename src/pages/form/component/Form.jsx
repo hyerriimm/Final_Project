@@ -92,10 +92,9 @@ const Form = () => {
     <StContainer>
     <Item2Form onSubmit={onSubmitHandler}>
       <StDiv>
-        <img
+        <BackSpaceImg
           alt='뒤로가기'
           src='img/backspace.png'
-          style={{ width: '25px', height: '25px', marginRight: '10px' }}
           onClick={() => navigate('/')}
         />
         <h3>모임 등록</h3>
@@ -222,7 +221,7 @@ const StContainer = styled.div`
   padding: 10px;
   margin: 0 auto;
   grid-template-areas:
-    'a' 'b' 'b' 'b' 'c';
+    'a b b b c';
 `;
 
 const Item2Form = styled.form`
@@ -232,6 +231,18 @@ const Item2Form = styled.form`
   display: flex;
   flex-direction: column;
   margin: 0 auto; 
+`;
+
+const BackSpaceImg = styled.img`
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  border: transparent;
+  cursor: pointer;
+  :hover {
+            filter: brightness(90%);
+            box-shadow: 2px 2px 10px 0 #bcd7ff;
+  }
 `;
 
 const StInput = styled.input`
@@ -316,4 +327,9 @@ const StButton = styled.button`
   border-radius: 6px;
   margin-top: 20px;
   font-size: 15px;
+  cursor: pointer;
+  :hover {
+            filter: brightness(90%);
+            box-shadow: 1px 1px 3px 0 #bcd7ff;
+  }
 `;
