@@ -1,8 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 
 const MypageProfile = () => {
+
+    const navigate = useNavigate();
+  
+    
     return (
         <>
             <Container>
@@ -13,11 +18,11 @@ const MypageProfile = () => {
                         <StId>아이디</StId>
                     </DescWrapper>
                 </ProfileWrapper>
-                <EditBtn>계정수정</EditBtn>
+                <EditBtn onClick={() => { navigate('/mypage/infoedit')}}>계정수정</EditBtn>
             </Container>
             <BtnSet>
-                <Wish>찜 목록</Wish>
-                <Activity>내 활동</Activity>
+                <Wish onClick={() => { navigate('/mypage/wish')}}>찜 목록</Wish>
+                <Activity onClick={() => { navigate('/mypage/activity')}}>내 활동</Activity>
             </BtnSet>
         </>
     );
@@ -83,7 +88,8 @@ const EditBtn = styled.button`
     width: 70px;
     font-size: 12px;
     border: 0px;
-    margin: 10px 0 0 0
+    margin: 10px 0 0 0;
+    cursor: pointer;
 `
 
 const BtnSet = styled.div`
@@ -92,7 +98,7 @@ const BtnSet = styled.div`
     height: 38px;
     width: 300px;
     margin: auto;
-    margin-top: 10px;
+    margin-top: 15px;
     margin-bottom: 20px;
     /* border: 0.5px solid lightgray; */
     border-radius: 4px;
@@ -110,6 +116,7 @@ const Wish = styled.button`
     font-size: 12px;
     text-decoration: none; 
     color: #1565C0 !important;
+    cursor: pointer;
 `
 
 const Activity = styled.button`
@@ -123,4 +130,5 @@ const Activity = styled.button`
     font-size: 12px;
     text-decoration: none; 
     color: #1565C0 !important;
+    cursor: pointer;
 `
