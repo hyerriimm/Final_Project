@@ -9,13 +9,35 @@ const MainBoard = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const list = useSelector((state) => state.cardlist.cardlist)
-    console.log(list)
+    const { isLoading, error } = useSelector((state) => state.cardlist);
+    const list = useSelector((state) => state.cardlist.cardlist);
+    // console.log(list);
 
     useEffect(()=> {
       dispatch(__cardlist());
-    }, []);
+    }, [list.length]);
 
+if (isLoading) {
+  return <Loading>
+    <img alt='로딩중'
+  src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921'
+  />
+    </Loading>
+}
+
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
+  if (list.length === 0) {
+    return (
+      <Stack>
+        <Empty>•••🤔</Empty>
+        <div>게시물 없습니다.</div>
+        <div>모임을 만들어 주세요.</div>
+      </Stack>
+    );
+  }
 
   return (
     <>
@@ -23,14 +45,28 @@ const MainBoard = () => {
       <ListContainer>
         {list.slice().reverse().map((list) => {
           return ( 
-            <CardWrapper key={list.id} onClick={() => { navigate(`/detail/${list.id}`) }}>
+            <CardWrapper 
+            key={list.id} 
+            onClick={() => {
+              if (list.restDay.split("일")[0] <= 0) {
+                alert('이미 마감된 모임입니다.')
+              } else {
+                navigate(`/detail/${list.id}`) 
+              }
+              }}>
               <ImageContainer>
                 <img src={list.imgUrl} alt=""/>
               </ImageContainer>
               <DescContainer>
                 <TitleWrapper>
                 <Title>{list.title}</Title>
-                <RestDay><p>마감 {list.restDay}</p></RestDay>
+                <RestDay>
+                {list.restDay.split("일")[0] <= 0 ? (
+                <p style={{ color: '#e51e1e'}}>마감 완료</p>
+                ):(
+                  <p>마감 {list.restDay}</p>
+                )}
+                </RestDay>
                 </TitleWrapper>
                 <Address>{list.address}</Address>
                 <Dday>{list.dday}</Dday>
@@ -46,6 +82,35 @@ const MainBoard = () => {
 
 export default MainBoard;
 
+const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  width: 80%;
+  /* display: flex;
+  justify-content: center;
+  height: 400px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #bdbdbd; */
+`;
+
+const Stack = styled.div`
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  div{
+  font-size: 18px;
+  font-weight: bold;
+  color: #555555;
+  }
+`;
+
+const Empty = styled.h1`
+  font-size: 100px;
+`;
 
 const Container = styled.div`
     display: flex;
@@ -102,7 +167,6 @@ const CardWrapper = styled.div`
             filter: brightness(90%);
             box-shadow: 1px 1px 3px 0 #bcd7ff;
   }
-
 `;
 
 const ImageContainer = styled.div`
@@ -138,6 +202,7 @@ const Title = styled.div`
   font-weight: 600;
   margin: 0 0 0 10px;
   font-family: 'NotoSansKR';
+  width: 72%;
 `;
 
 const RestDay = styled.div`

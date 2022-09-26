@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { user } from "../modules/user";
-import cardlist from "../modules/cardlist"
+import cardlist from "../modules/cardlist";
+import detail from "../modules/detail";
 import partilist from "../modules/partilist"
 
 
@@ -9,7 +10,8 @@ const store = configureStore({
     reducer: { 
        user: user.reducer,
        cardlist,
-       partilist
+       partilist,
+       detail
     },
         
     middleware: (getDefaultMiddleware) => 

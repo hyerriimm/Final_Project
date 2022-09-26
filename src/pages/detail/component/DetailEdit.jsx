@@ -1,23 +1,49 @@
-import React, { useRef, useState, Component } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState, useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { DatePicker, RangeDatePicker } from '@y0c/react-datepicker';
 import '@y0c/react-datepicker/assets/styles/calendar.scss';
 import 'moment/locale/ko';
 
-const Form = () => {
-  const navigate = useNavigate();
+import { __detail } from '../../../redux/modules/detail';
 
-  const [title, setTitle] = useState("");
-  const [address, setAddress] = useState("아직 구현 못함");
-  const [content, setContent] = useState("");
-  const [maxNum, setMaxNum] = useState(""); 
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [dDay, setDday] = useState('');
+const DetailEdit = () => {
+  const navigate = useNavigate();
+  const params_id = useParams().id;
+  const dispatch = useDispatch();
+
+  const { detail } = useSelector((state)=> state.detail);
+  //   address 주소
+//   authorNickname 게시글 작성자 닉네임
+//   authorId 게시글 작성자 아이디
+//   commentList: [] 게시글 댓글 리스트
+//   content 게시글 내용
+//   dday 모임 일자
+//   endDate 마감 일자
+//   id 게시글 id
+//   maxNum 모집인원
+//   memberImgUrl 작성자 프사
+//   postImgUrl 게시글 썸네일
+//   restDay 남은 모집 기간
+//   startDate 공고일
+//   title 게시글 제목
+//   currentNum 현재 모집된 인원
+
+  useEffect(()=>{
+    dispatch(__detail(params_id))
+  },[])
+
+  const [title, setTitle] = useState(detail.title);
+  const [address, setAddress] = useState(detail.address);
+  const [content, setContent] = useState(detail.content);
+  const [maxNum, setMaxNum] = useState(detail.maxNum); 
+  const [startDate, setStartDate] = useState(detail.startDate);
+  const [endDate, setEndDate] = useState(detail.endDate);
+  const [dDay, setDday] = useState(detail.dday);
   const [imgFile, setImgFile] = useState(null);
-  const [previewImg, setPreviewImg] = useState('');
+  const [previewImg, setPreviewImg] = useState(detail.postImgUrl);
   const imgFileInputRef = useRef();
   const imgFileUploadBtnRef = useRef();
 
@@ -38,71 +64,78 @@ const Form = () => {
     setPreviewImg(URL.createObjectURL(e.target.files[0]));
   };
 
-  const onSubmitHandler = async (e) => {
+  const onEditHandler = async (e) => {
     e.preventDefault();
     if (title.trim() === '' ||
         address.trim() === '' ||
         content.trim() === '' ||
-        maxNum.trim() === '' ||
+        maxNum === '' ||
         startDate === null||
         endDate === null ||
-        dDay === null ||
-        imgFile === null
+        dDay === null
     ) {
-      return alert('모든항목을 입력해야 등록 가능합니다.')
+      return alert('모든항목을 입력해야 수정 가능합니다.')
     }
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('address', address);
-    formData.append('content', content);
-    formData.append('maxNum', Number(maxNum));
-    formData.append('startDate', new Date(+startDate + 3240 * 10000).toISOString().split("T")[0]);
-    formData.append('endDate', new Date(+endDate + 3240 * 10000).toISOString().split("T")[0]);
-    formData.append('dDay', new Date(+dDay + 3240 * 10000).toISOString().split("T")[0]);
-    formData.append('imgFile', imgFile);
-
-    try {
-      const ACCESSTOKEN = localStorage.getItem('ACCESSTOKEN');
-      const REFRESHTOKEN = localStorage.getItem('REFRESHTOKEN');
-      const response = await axios.post('http://13.125.229.126:8080/post', formData, {
-        headers: {
-          "Content-Type":"multipart/form-data",
-          "Authorization":ACCESSTOKEN,
-          "RefreshToken":REFRESHTOKEN,
-        }
-      });
-          
-      if (response.data.success === true) {
-          alert(response.data.data);
-          return navigate('/');
-      };
-      if (response.data.success === false) {
-          alert(response.data.error.message);
-          return
-      };
-  } catch (error) {
-      console.log(error);
-  }
-    navigate('/');
-    resetAllStates();
+    if (window.confirm('수정사항을 저장하시겠습니까?')) {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('address', address);
+      formData.append('content', content);
+      formData.append('maxNum', Number(maxNum));
+      formData.append('startDate', startDate ===  detail.startDate ? detail.startDate : new Date(+startDate + 3240 * 10000).toISOString().split("T")[0] );
+      formData.append('endDate', endDate === detail.endDate ? detail.endDate : new Date(+endDate + 3240 * 10000).toISOString().split("T")[0] );
+      formData.append('dDay', dDay === detail.dday ? detail.dday : new Date(+dDay + 3240 * 10000).toISOString().split("T")[0] );
+      if (imgFile!==null) {
+        formData.append('ImgFile', imgFile);
+      }
+  
+      try {
+        const ACCESSTOKEN = localStorage.getItem('ACCESSTOKEN');
+        const REFRESHTOKEN = localStorage.getItem('REFRESHTOKEN');
+        const response = await axios.put(`http://13.125.229.126:8080/post/${detail.id}`, formData, {
+          headers: {
+            "Content-Type":"multipart/form-data",
+            "Authorization":ACCESSTOKEN,
+            "RefreshToken":REFRESHTOKEN,
+          }
+        });
+            
+        if (response.data.success === true) {
+            alert(response.data.data);
+            resetAllStates();
+            return navigate(`/detail/${detail.id}`);
+        };
+        if (response.data.success === false) {
+            alert(response.data.error.message);
+            return
+        };
+    } catch (error) {
+        console.log(error);
+    }
+    }
+    // navigate('/');
+    // resetAllStates();
   };
 
 
   return (
     <StContainer>
-    <Item2Form onSubmit={onSubmitHandler}>
+    <Item2Form onSubmit={onEditHandler}>
       <StDiv>
         <BackSpaceImg
           alt='뒤로가기'
-          src='img/backspace.png'
-          onClick={() => navigate('/')}
+          src={`${process.env.PUBLIC_URL}/img/backspace.png`}
+          onClick={() => {
+            navigate(-1);
+            resetAllStates();
+          }}
         />
-        <h3>모임 등록</h3>
+        <h3>게시글 수정하기</h3>
       </StDiv>
       <StDiv style={{ flexDirection: 'column', alignItems:'normal' }}>
         <StImg
-          src={previewImg? previewImg : 'img/addimage.png'}
-          alt='썸네일 사진을 등록해주세요.'
+          src={previewImg? previewImg : detail.postImgUrl }
+          alt='썸네일 사진을 재등록해주세요.'
           onClick={() => {
             imgFileUploadBtnRef.current.click();
           }}
@@ -123,7 +156,7 @@ const Form = () => {
             imgFileInputRef.current.click();
           }}
         >
-          썸네일 사진 등록
+          썸네일 사진 재등록
         </StButton>
       </StDiv>
       <StDiv>
@@ -141,6 +174,7 @@ const Form = () => {
         <StTextarea
         cols='27'
         rows='10'
+          value={content}
           required
           name='content'
           placeholder='내용 (250자 이내)'
@@ -171,8 +205,8 @@ const Form = () => {
         <RangeDatePicker
             startText='Start'
             endText='End'
-            startPlaceholder=" 모집 시작일 "
-            endPlaceholder=" 모집 종료일 "
+            startPlaceholder={startDate}
+            endPlaceholder={endDate}
             // locale='ko'
             clear
             // portal
@@ -187,8 +221,9 @@ const Form = () => {
         <div style={{fontWeight:'bold'}}>모임 날짜</div>
         <div style={{marginTop:'10px'}}>
           <DatePicker
+            placeholder={dDay}
             onChange={(date) => setDday(date.$d)}
-            locale='ko'
+            locale="ko"
             showDefaultIcon
             clear
           />
@@ -198,6 +233,7 @@ const Form = () => {
       <StButton type='button' style={{ backgroundColor: '#1E88E5' }}>
         모임 장소 입력(address, 카카오맵)
       </StButton>
+      <div>현재 모임 장소: {address}</div>
       <div 
       style={{width:'100%', height:'200px', marginTop:'10px',
       display:'flex', justifyContent:'center', alignItems:'center',
@@ -205,14 +241,14 @@ const Form = () => {
       지도가 나올 공간 
       </div>
       <StButton type='submit' style={{ backgroundColor: '#038E00' }}>
-        모임 등록하기
+        수정하기
       </StButton>
     </Item2Form>
     </StContainer>
   );
 };
 
-export default Form;
+export default DetailEdit;
 
 const StContainer = styled.div`
   display: grid;
