@@ -28,7 +28,7 @@ const Router = () => {
           <Route path='/detail/:id/apply' element={<ApplyFormPg />}/>
           <Route path='/detail/:id/check' element={<ApplyCheckPg />}/>
           <Route path='form' element={<FormPg />}/>
-          <Route path='mypage' element={<MypagePg />}/>
+          <Route path='/mypage' element={<MypagePg />}/>
           <Route path='/mypage/infoedit' element={<MyInfoEditPg />}/>
           <Route path='/mypage/wish' element={<WishPg />}/>
           <Route path='/mypage/activity' element={<MyActivityPg />}/>
