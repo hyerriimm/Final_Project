@@ -21,7 +21,7 @@ const MainBoard = () => {
     <>
       <Container>
       <ListContainer>
-        {list.map((list) => {
+        {list.slice().reverse().map((list) => {
           return ( 
             <CardWrapper key={list.id} onClick={() => { navigate(`/detail/${list.id}`) }}>
               <ImageContainer>
