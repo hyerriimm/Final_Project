@@ -12,22 +12,17 @@ const Comment = () => {
   const [comment, setComment] = useState();
   const [commentList, setCommentList] = useState([]);
 
-
   const getCommentList = async () => {
     const _commentList = await dispatch(getComments(id));
-
-
 
     if (_commentList.payload.data.length > 0) {
       setCommentList(_commentList.payload.data);
     }
   };
 
-
   useEffect(() => {
     getCommentList();
   }, []);
-
 
   const submit = async () => {
     if (!comment) {
@@ -55,7 +50,6 @@ const Comment = () => {
   const commentClear = () => {
     setComment({ commentId: "", comment: "" });
   };
-
 
   const commentItems = commentList.map((item) => {
     console.log(item);

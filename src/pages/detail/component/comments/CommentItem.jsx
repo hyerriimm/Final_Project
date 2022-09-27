@@ -14,14 +14,12 @@ const CommentItem = ({ item, getCommentList }) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [comment, setComment] = useState({});
 
-
   const setUpdate = () => {
     if (!isUpdate) {
       setComment(item.content);
     }
     setIsUpdate(!isUpdate);
   };
-
 
   const handleUpdate = async (ev) => {
     if (ev.key === "Enter") {
@@ -41,7 +39,6 @@ const CommentItem = ({ item, getCommentList }) => {
       getCommentList();
     }
   };
-
 
   const handleDelete = async () => {
     if (!window.confirm("댓글을 삭제하시겠습니까?")) {

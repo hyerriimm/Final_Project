@@ -3,7 +3,6 @@ import axios from "axios";
 
 const API_URL = "http://13.125.229.126:8080";
 
-
 //댓글 조회
 export const getComments = createAsyncThunk(
   "comment",
@@ -23,7 +22,6 @@ export const getComments = createAsyncThunk(
     }
   }
 );
-
 
 //댓글 작성
 export const createComment = createAsyncThunk(
@@ -50,7 +48,6 @@ export const createComment = createAsyncThunk(
   }
 );
 
-
 //댓글 수정
 export const updateComment = createAsyncThunk(
   "comment",
@@ -75,7 +72,6 @@ export const updateComment = createAsyncThunk(
     }
   }
 );
-
 
 //댓글 삭제
 export const deleteComment = createAsyncThunk(
