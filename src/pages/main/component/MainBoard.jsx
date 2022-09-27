@@ -33,7 +33,7 @@ if (isLoading) {
     return (
       <Stack>
         <Empty>•••🤔</Empty>
-        <div>게시물 없습니다.</div>
+        <div>등록된 게시물이 없습니다.</div>
         <div>모임을 만들어 주세요.</div>
       </Stack>
     );
@@ -114,6 +114,7 @@ const Empty = styled.h1`
 
 const Container = styled.div`
     display: flex;
+    margin-top: 20px;
     justify-content: center;
     /* background-color: antiquewhite; */
     /* border: 1px solid black; */
