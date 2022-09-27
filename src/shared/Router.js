@@ -34,6 +34,7 @@ const Router = () => {
           <Route path='/mypage/activity' element={<MyActivityPg />}/>
           <Route path='/chatlist' element={<ChatListPg />}/>
           <Route path='/chatlist/:id' element={<ChatDetailPg />}/>
+          <Route path="*" element={<div>404 error 없는페이지입니다</div>} />
         </Routes>
       </BrowserRouter>
     );

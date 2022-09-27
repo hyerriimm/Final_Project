@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { signUp } from "../../../redux/modules/user";
+import { useSelector } from "react-redux";
+import { signUp, _getUsersName } from "../../../redux/modules/user";
 
 
 
@@ -46,9 +47,20 @@ const Signup = () => {
     setPreviewImg("");
 };
 
-//const regexuserId =  /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
-// const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
-const regexPassword = /^(?=.*?[a-zA-z])(?=.*?[0-9]).{4,12}$/;
+    // //중복확인
+    // useEffect(()=>{dispatch(_getUsersName())},[])
+    
+    // const userIdList = useSelector(state => state.user.userId)
+    // const userNicknameList = useSelector(state => state.user.nickname)
+
+    // const Idcheck = userIdList.filter((e)=> e.userId == user.userId)
+    // const Nicknamecheck = userIdList.filter((e)=> e.nickname == user.nickname)
+
+
+    //유효성검사
+    const regexuserId =  /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
+    // const regexPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+    const regexPassword = /^(?=.*?[a-zA-z])(?=.*?[0-9]).{4,12}$/;
 
 
   //체크박스 전체 선택 및 해제
@@ -129,7 +141,15 @@ const regexPassword = /^(?=.*?[a-zA-z])(?=.*?[0-9]).{4,12}$/;
                     type="email"
                     name="userId"
                     onChange={(e)=>setUserId(e.target.value)}/>
-                    
+                    {/* {
+                        user.userId && (Idcheck.length === 0
+                        ? (regexuserId.test(user.userId)
+                        ? <div style={{color:"green", fontSize:"8px"}}>사용가능한 이메일입니다</div>
+                        : <div style={{color:"red", fontSize:"8px"}}>이메일을 다시 확인해주세요</div>)
+                        : <div style={{color:"red", fontSize:"8px"}}>이미 있는 이메일입니다.</div>)
+                    } */}
+
+
                 <Input  
                     placeholder='비밀번호를 입력하세요'
                     type="password"
@@ -138,8 +158,7 @@ const regexPassword = /^(?=.*?[a-zA-z])(?=.*?[0-9]).{4,12}$/;
                     {
                     password && (regexPassword.test(password)
                     ? <div style={{color:"green", fontSize:"8px"}}>사용가능한 비밀번호 입니다</div>
-                    : 
-                    <div style={{color:"red", fontSize:"8px"}}>영문, 숫자를 포함하여 4~12자리 비밀번호를 입력해주세요</div>
+                    : <div style={{color:"red", fontSize:"8px"}}>영문, 숫자를 포함하여 4~12자리 비밀번호를 입력해주세요</div>
                     // <div style={{color:"red", fontSize:"8px"}}>영문, 숫자, 특수문자를 사용하여 8~16자리 비밀번호를 입력해주세요</div>
                     )
                     }

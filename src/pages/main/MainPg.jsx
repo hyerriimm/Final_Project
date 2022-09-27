@@ -4,6 +4,7 @@ import Banner from "./component/Banner"
 import MainBoard from './component/MainBoard';
 
 const MainPg = () => {
+
     return (
         <div>
             <Header/>
@@ -12,5 +13,6 @@ const MainPg = () => {
         </div>
     );
 }
+
 
 export default MainPg;
