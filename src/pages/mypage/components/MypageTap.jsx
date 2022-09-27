@@ -54,48 +54,56 @@ export default function BasicTabs() {
   const navigate = useNavigate();
 
   const list = useSelector((state) => state.partilist.cardlist)
-  console.log(list)
+  
+  // console.log(list)
 
   useEffect(()=> {
     dispatch(__parti());
   }, []);
 
     return (
-        <Box sx={{ width: '90%', margin: 'auto' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="내가 만든 모임" {...a11yProps(0)} />
-                    <Tab label="내가 참여한 모임" {...a11yProps(1)} />
-                </Tabs>
-            </Box>
-            <TabPanel value={value} index={0}>
-                <Container>
-                    <ListContainer>
-                        {list?.map((list) => {
-                            return (
-                                <CardWrapper key={list.id} onClick={() => { navigate(`/detail/${list.id}`) }}>
-                                    <ImageContainer>
-                                        <img src={list.imgUrl} alt="" />
-                                    </ImageContainer>
-                                    <DescContainer>
-                                        <TitleWrapper>
-                                            <Title>{list.title}</Title>
-                                        </TitleWrapper>
-                                        <Address>{list.address}</Address>
-                                        <Dday>{list.dday}</Dday>
-                                    </DescContainer>
-                                </CardWrapper>
-                            );
-                        })}
-                    </ListContainer>
-                </Container>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
+      <Box sx={{ width: '90%', margin: 'auto' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="내가 만든 모임" {...a11yProps(0)} />
+            <Tab label="내가 참여한 모임" {...a11yProps(1)} />
+          </Tabs>
         </Box>
+        <TabPanel value={value} index={0}>
+          <Container>
+            <ListContainer>
+              {list?.map((list) => {
+                return (
+                  <CardWrapper key={list.postId} onClick={() => { navigate(`/detail/${list.postId}`) }}>
+                    <ImageContainer>
+                      <img src={list.imgUrl} alt="" />
+                    </ImageContainer>
+                    <DescContainer>
+                      <TitleWrapper>
+                        <Title>{list.title}</Title>
+                        <RestDay>
+                          {list.restDay.split("일")[0] <= 0 ? (
+                            <p style={{ color: '#e51e1e' }}>마감 완료</p>
+                          ) : (
+                            <p>마감 {list.restDay}</p>
+                          )}
+                        </RestDay>
+                      </TitleWrapper>
+                      <Address>{list.address}</Address>
+                      <Dday>{list.dday}</Dday>
+                    </DescContainer>
+                  </CardWrapper>
+                );
+              })}
+            </ListContainer>
+          </Container>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          Item Two
+        </TabPanel>
+      </Box>
     );
-}
+  }
 
 const Container = styled.div`
     display: flex;
@@ -122,7 +130,7 @@ const CardWrapper = styled.div`
   cursor: pointer;
   :hover {
             filter: brightness(90%);
-            box-shadow: 1px 1px 3px 0 #bcd7ff;
+            /* box-shadow: 1px 1px 3px 0 #bcd7ff; */
   }
 
 `;
@@ -134,7 +142,7 @@ const ImageContainer = styled.div`
     img {
         display: flex;
         width: 100px;
-        height: 120px;
+        height: 115px;
         object-fit: cover;
         border-radius: 4px;
     }
@@ -144,6 +152,7 @@ const DescContainer = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
+  margin-left: 10px;
   /* background-color: antiquewhite; */
   
 `;
@@ -156,12 +165,19 @@ const TitleWrapper = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   margin: 0 0 0 10px;
   font-family: 'NotoSansKR';
 `;
 
+const RestDay = styled.div`
+  font-size: 11px;
+  /* background-color: #f0f0f0; */
+  /* border-radius: 1px; */
+  color: #1E88E5;
+  margin: 0 15px 0 0
+`;
 
 const Address = styled.div`
   font-size: 13px;

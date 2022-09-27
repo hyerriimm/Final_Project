@@ -9,7 +9,7 @@ const Header = () => {
     const [profileImg,setProfileImg] = useState(undefined);
     const profile = `${profileImg}` // "https://avatars.dicebear.com/api/adventurer-neutral/:seed.svg"
 
-    // const modalRef = useRef();
+    const modalRef = useRef();
     const [isOpen, setIsOpen] = useState(false);
     const handleModal = () => {
       setIsOpen(!isOpen)
@@ -29,19 +29,19 @@ const Header = () => {
     });
 
 
-    // useEffect(() => {
-    //   const onClickOutside = (e) => {
-    //       if (elem.current !== null && !elem.current.contains(e.target)) {
-    //           setIsOpen(!isOpen);
-    //       }
-    //   };
-    //   if (isOpen) {
-    //       window.addEventListener("click", onClickOutside);
-    //   }
-    //   return () => {
-    //       window.removeEventListener("click", onClickOutside);
-    //   };
-    // });
+    useEffect(() => {
+      const onClickOutside = (e) => {
+          if (modalRef.current !== null && !modalRef.current.contains(e.target)) {
+              setIsOpen(!isOpen);
+          }
+      };
+      if (isOpen) {
+          window.addEventListener("click", onClickOutside);
+      }
+      return () => {
+          window.removeEventListener("click", onClickOutside);
+      };
+    });
 
     const siteLogout = () => {
       if (window.confirm("로그아웃 하시겠습니까?")) {
@@ -64,7 +64,7 @@ const Header = () => {
                 { accesstoken ? 
                 ( <>
                   <Btn onClick={()=>navigate('/form')}>모임등록</Btn>
-                  <BtnProfile onClick={handleModal}>
+                  <BtnProfile ref={modalRef} onClick={handleModal}>
                       <img src={ profile } alt="profile"/>
                   </BtnProfile>
                   </>
@@ -75,12 +75,11 @@ const Header = () => {
             </BtnWrapper>
         </HdContainer>
         {isOpen === false ? null 
-        : <ModalBackdrop onClick={handleModal}>
+        :
         <Menu>
           <MenuText onClick={()=>navigate('/mypage')}>마이페이지</MenuText>
           <MenuText onClick={siteLogout}>로그아웃</MenuText>
         </Menu>
-        </ModalBackdrop>
         }
         </>
     );
@@ -94,6 +93,9 @@ const HdContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     position: sticky;
+    top: 0;
+    opacity: 0.94;
+    backdrop-filter: blur(60px);
     width: 100%;
     margin: 0 auto;
     height: 56px;
@@ -139,6 +141,7 @@ const BtnProfile = styled.div`
           width: 100%;
           height: 100%;
           border-radius: 100%;
+          object-fit: cover;
       }
 `
 
@@ -149,7 +152,7 @@ const ModalBackdrop = styled.div`
 const Menu = styled.div`
     background: #fff;
     border-radius: 8px;
-    position: absolute;
+    position: fixed;
     top: 50px;
     right: 25px;
     width: 150px;
