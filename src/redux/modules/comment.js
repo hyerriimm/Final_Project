@@ -15,7 +15,6 @@ export const getComments = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
-      if (data.data.success === false) alert(data.data.error.message);
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
