@@ -40,4 +40,20 @@ export const user = createSlice({
 }
 );
 
+
+export const _getUsersName = createAsyncThunk(
+  "getUsersName",
+  async (payload, thunkAPI) => {
+    // console.log(payload)
+    try {
+      const data = await axios.get(`${API_URL}`);
+      // console.log(data.data.data)
+      return thunkAPI.fulfillWithValue(data.data.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+
 export default user.reducer;
