@@ -9,7 +9,7 @@ export const signUp = createAsyncThunk(
     "member/signup", 
     async (payload, thunkAPI) => { 
         try {
-            console.log(payload)
+            // console.log(payload)
             const data = await axios.post(`${API_URL}/member/signup`, payload, {
               headers: {
                 "Content-Type":"multipart/form-data"

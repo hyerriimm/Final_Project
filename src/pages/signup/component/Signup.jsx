@@ -123,7 +123,7 @@ const Signup = () => {
         };
 
         dispatch(signUp(formData));
-        navigate('/');
+        navigate('/login');
         resetAllStates();
     };
 

@@ -4,6 +4,7 @@ import SignupPg from "../pages/signup/SignupPg";
 import LoginPg from "../pages/login/LoginPg";
 import KaKao from '../pages/login/Kakao';
 import DetailPg from "../pages/detail/DetailPg"
+import DetailEditPg from "../pages/detail/DetailEditPg"
 import ApplyFormPg from "../pages/detail/ApplyFormPg"
 import ApplyCheckPg from "../pages/detail/ApplyCheckPg"
 import FormPg from "../pages/form/FormPg"
@@ -23,10 +24,11 @@ const Router = () => {
           <Route path='login' element={<LoginPg />}/>
           <Route path='/oauth/kakao' element={<KaKao />} /> {/* 리다이렉트 되는 화면 */}
           <Route path='/detail/:id' element={<DetailPg />}/>
+          <Route path='/detail/:id/edit' element={<DetailEditPg />}/>
           <Route path='/detail/:id/apply' element={<ApplyFormPg />}/>
           <Route path='/detail/:id/check' element={<ApplyCheckPg />}/>
           <Route path='form' element={<FormPg />}/>
-          <Route path='mypage' element={<MypagePg />}/>
+          <Route path='/mypage' element={<MypagePg />}/>
           <Route path='/mypage/infoedit' element={<MyInfoEditPg />}/>
           <Route path='/mypage/wish' element={<WishPg />}/>
           <Route path='/mypage/activity' element={<MyActivityPg />}/>
