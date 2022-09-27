@@ -49,12 +49,12 @@ export const __addWish = createAsyncThunk(
               refreshtoken: localStorage.getItem("REFRESHTOKEN")
             }
           });
-          console.log(data.data.data);
-          if(data.data.success === false) {
-            alert(data.data.error.message)
-          } else {
-            alert('게시글 찜 완료')
-          }
+          // console.log(data.data.data);
+          // if(data.data.success === false) {
+          //   alert(data.data.error.message)
+          // } else {
+          //   alert('게시글 찜 완료')
+          // }
           return thunkAPI.fulfillWithValue(data.data.data);
       } catch (error) {
         return thunkAPI.rejectWithValue(error);
@@ -72,12 +72,12 @@ export const __removeWish = createAsyncThunk(
               refreshtoken: localStorage.getItem("REFRESHTOKEN")
             }
           });
-          console.log(data.data.data);
-          if(data.data.success === false) {
-            alert(data.data.error.message)
-          } else {
-            alert('게시글 찜 취소')
-          }
+          // console.log(data.data.data);
+          // if(data.data.success === false) {
+          //   alert(data.data.error.message)
+          // } else {
+          //   alert('게시글 찜 취소')
+          // }
           return thunkAPI.fulfillWithValue(data.data.data);
       } catch (error) {
         return thunkAPI.rejectWithValue(error);
@@ -88,6 +88,7 @@ export const detail = createSlice({
   name: 'detail',
   initialState: {
     detail: {},
+    detail_wishPeople:[],
     wishData: {},
     error: null,
     isLoading: false,
@@ -102,6 +103,7 @@ export const detail = createSlice({
     .addCase(__detail.fulfilled, (state, action) => {
       state.isLoading = false;
       state.detail = action.payload;
+      state.detail_wishPeople = action.payload.wishPeople;
       // Promise가 fullfilled일 때 dispatch
     })
     .addCase(__detail.rejected, (state, action) => {
