@@ -23,7 +23,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 2 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -83,9 +83,9 @@ export default function BasicTabs() {
                         <Title>{list.title}</Title>
                         <RestDay>
                           {list.restDay.split("일")[0] <= 0 ? (
-                            <p style={{ color: '#e51e1e' }}>마감 완료</p>
+                            <div style={{ color: '#e51e1e' }}>마감 완료</div>
                           ) : (
-                            <p>마감 {list.restDay}</p>
+                            <div>마감 {list.restDay}</div>
                           )}
                         </RestDay>
                       </TitleWrapper>
