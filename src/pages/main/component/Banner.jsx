@@ -53,6 +53,7 @@ const StSlider = styled(Slider)`
     .slick-slide div{
       outline: none;
     }
+    /* .slick-list { padding: 0 20px 0 20px !important; } */
 `;
 
 const ImageContainer = styled.div`
@@ -60,6 +61,8 @@ const ImageContainer = styled.div`
 `;
 
 const Image = styled.img`
-max-width: 100%;
-max-height: 100%;
+  max-width: 100%;
+  max-height: 80%;
+  min-height: 240px;
+  object-fit: cover;
 `;
