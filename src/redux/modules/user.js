@@ -46,7 +46,7 @@ export const _getUsersName = createAsyncThunk(
   async (payload, thunkAPI) => {
     // console.log(payload)
     try {
-      const data = await axios.get('${API_URL}');
+      const data = await axios.get(`${API_URL}`);
       // console.log(data.data.data)
       return thunkAPI.fulfillWithValue(data.data.data);
     } catch (error) {

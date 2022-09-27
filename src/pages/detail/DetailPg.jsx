@@ -1,10 +1,13 @@
 import React from 'react';
+import Header from '../../components/Header';
+import Comment from './component/comments/Comment';
 
 const DetailPg = () => {
     return (
-        <div>
-            
-        </div>
+      <div>
+        <Header />
+        <Comment />
+      </div>
     );
 }
 
