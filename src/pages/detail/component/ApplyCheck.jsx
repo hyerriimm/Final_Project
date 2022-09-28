@@ -22,10 +22,6 @@ const ApplyCheck = () => {
 
   // useState를 사용하여 open상태를 변경한다. (open일때 true로 만들어 열리는 방식)
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalConent] = useState();
-  const [modalNickname, setModalNickname] = useState();
-  const [modalApplicationId, setModalApplicationId] = useState();
-  const [modalState, setModalState] = useState();
 
   const openModal = () => {
     setModalOpen(true);
@@ -33,24 +29,25 @@ const ApplyCheck = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
+
   
   const onClickRefuseBtn = (nickname, applicationId) => {
     if (window.confirm(`${nickname}님의 신청을 거절하시겠습니까?`)) {
       dispatch(__refuse(applicationId));
-      // setModalOpen(false);
+      setModalOpen(false);
     }
   };
   
   const onClickAcceptBtn = (nickname, applicationId) => {
     if (window.confirm(`${nickname}님의 신청을 수락하시겠습니까?`)) {
       dispatch(__accept(applicationId));
-      // setModalOpen(false);
+      setModalOpen(false);
     }
   };
 
   useEffect(() => {
     dispatch(__getApplication(params_id));
-  }, []);
+  }, [applicants.length]);
   
   return (
     <StContainer>
@@ -73,15 +70,7 @@ const ApplyCheck = () => {
             <div key={uuidv4()}>
               { eachApplicant.state !== "WAIT" ? (
                 eachApplicant.state !== "APPROVED" ? (
-              <DENIEDCard
-              onClick={()=>{
-                openModal(); 
-                setModalConent(eachApplicant.content); 
-                setModalNickname(eachApplicant.nickname);
-                setModalApplicationId(eachApplicant.applicationId);
-                setModalState(eachApplicant.state);
-                }}
-              >
+              <DENIEDCard>
                 <Body>
                   <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
                   <StP>
@@ -90,15 +79,7 @@ const ApplyCheck = () => {
                 </Body>
               </DENIEDCard>
                 ): (
-                <APPROVEDCard
-                onClick={()=>{
-                  openModal(); 
-                  setModalConent(eachApplicant.content); 
-                  setModalNickname(eachApplicant.nickname);
-                  setModalApplicationId(eachApplicant.applicationId);
-                  setModalState(eachApplicant.state);
-                  }}
-                >
+                <APPROVEDCard>
                   <Body>
                     <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
                     <StP>
@@ -119,32 +100,24 @@ const ApplyCheck = () => {
                 <BtnsDiv>
                   <StButton
                   style={{backgroundColor:'#2196F3'}}
-                  onClick={()=>{
-                    openModal(); 
-                    setModalConent(eachApplicant.content); 
-                    setModalNickname(eachApplicant.nickname);
-                    setModalApplicationId(eachApplicant.applicationId);
-                    setModalState(eachApplicant.state);
-                    }}>
+                  onClick={openModal}>
                   지원내용 확인하기
                   </StButton>
                 </BtnsDiv>
+                <ModalOfApplyCheck 
+                open={modalOpen} 
+                close={closeModal} 
+                header={`지원자 ${eachApplicant.nickname}`}
+                nickname={eachApplicant.nickname}
+                applicationId={eachApplicant.applicationId}
+                onClickRefuseBtn={onClickRefuseBtn}
+                onClickAcceptBtn={onClickAcceptBtn}
+                >
+                  {/* Modal.js의  <main> {props.children} </main>에 내용이 입력된다.  */}
+                  {eachApplicant.content}
+                </ModalOfApplyCheck>
               </Card>
               ) }
-                <ModalOfApplyCheck 
-                  open={modalOpen} 
-                  close={closeModal} 
-                  header={`지원자 ${modalNickname}`}
-                  nickname={modalNickname}
-                  applicantStatus={modalState}
-                  applicationId={modalApplicationId}
-                  onClickRefuseBtn={onClickRefuseBtn}
-                  onClickAcceptBtn={onClickAcceptBtn}
-                  >
-                    {/* Modal.js의  <main> {props.children} </main>에 내용이 입력된다.  */}
-                    {/* {eachApplicant.content} */}
-                    {modalContent}
-                </ModalOfApplyCheck>
             </div>
           );
         })}
@@ -183,9 +156,6 @@ const StDiv = styled.div`
 `;
 
 const ApplyTitleDiv = styled.div`
-  max-width: 375px;
-  text-overflow: ellipsis; 
-  overflow : hidden;
   background-color: #d9d9d9;
   display: flex;
   flex-direction: column;
@@ -204,7 +174,7 @@ const ApplyTitleDiv = styled.div`
 
 const Card = styled.div`
   width: 100%;
-  height: fit-content;
+  height: 150px;
   border: 1px solid grey;
   display: flex;
   flex-direction: column;
@@ -232,7 +202,7 @@ const APPROVEDCard = styled.div`
 const Body = styled.div`
 box-sizing: border-box;
   width: 375px;
-  height: fit-content;
+  height: 150px;
   padding: 0 10px;
   display: flex;
   align-items: center;

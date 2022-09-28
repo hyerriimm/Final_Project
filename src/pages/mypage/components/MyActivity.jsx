@@ -55,7 +55,6 @@ export default function BasicTabs() {
 
   const partilist = useSelector((state) => state.gatheringlist.partilist);
   const leadlist = useSelector((state) => state.gatheringlist.leadlist);
- 
   const imgUrl = localStorage.getItem("ImgURL");
 
   useEffect(() => {
@@ -199,17 +198,6 @@ const CardWrapper = styled.div`
   }
 `
 
-const ImageContainer = styled.div`
-  display: flex;
-  box-sizing: border-box;
-  img {
-    display: flex;
-    width: 100px;
-    height: 115px;
-    object-fit: cover;
-    border-radius: 4px;
-  }
-`
 
 const DescContainer = styled.div`
   display: flex;
@@ -230,14 +218,6 @@ const Title = styled.div`
   font-family: "NotoSansKR";
   display: flex;
 `
-
-const RestDay = styled.div`
-  font-size: 11px;
-  /* background-color: #f0f0f0; */
-  /* border-radius: 1px; */
-  color: #1e88e5;
-  margin: 0 15px 0 0;
-`;
 
 
 const Circle = styled.div`
