@@ -98,17 +98,18 @@ const Textarea = styled.textarea`
   box-sizing: border-box;
   width: 237px;
   min-height: 150px;
+  resize: none;
   outline: none;
   border-radius: 3px;
   padding: 12px;
   font-size: 14px;
   border: 1px solid grey;
-    :focus {
-      outline: none;
-      border-color: #18a0fb;
-      box-shadow: 0 0 5px #18a0fb;
-    }
-`
+  :focus {
+    outline: none;
+    border-color: #18a0fb;
+    box-shadow: 0 0 5px #18a0fb;
+  }
+`;
 const Btn = styled.div`
     display: flex;
     justify-content: center;

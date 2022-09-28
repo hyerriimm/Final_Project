@@ -23,7 +23,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 2 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -106,7 +106,6 @@ const Container = styled.div`
 const ListContainer = styled.div`
     flex-direction: column;
     align-items: center;    
-
 `
 
 const CardWrapper = styled.div`
