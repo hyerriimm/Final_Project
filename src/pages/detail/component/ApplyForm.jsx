@@ -136,9 +136,10 @@ const StDiv = styled.div`
 `;
 
 const StTextarea = styled.textarea`
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   width: 100%;
   height: 200px;
+  resize: none;
   margin-top: 10px;
   padding-left: 10px;
   border: transparent;

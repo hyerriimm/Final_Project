@@ -3,14 +3,12 @@ import { useEffect } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
+// import Typography from '@mui/material/Typography';
 import Box from "@mui/material/Box";
 import { useDispatch, useSelector } from "react-redux";
-import { __parti } from "../../../redux/modules/gatheringlist";
+import { __parti, __lead } from "../../../redux/modules/gatheringlist";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
-
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -25,7 +23,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 2 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -41,7 +39,7 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -55,82 +53,105 @@ export default function BasicTabs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const wishlist = useSelector((state) => state.partilist.cardlist);
-  console.log(wishlist);
-
+  const partilist = useSelector((state) => state.gatheringlist.partilist);
+  const leadlist = useSelector((state) => state.gatheringlist.leadlist);
+ 
   const imgUrl = localStorage.getItem("ImgURL");
 
-  useEffect(()=> {
+  useEffect(() => {
     dispatch(__parti());
   }, []);
 
-    return (
-      <>
-        <Stcontainer>
-          <StDiv style={{ justifyContent: "flex-start" }}>
-            <img
-              alt="뒤로가기"
-              src="img/backspace.png"
-              style={{ width: "25px", height: "25px", marginRight: "10px" }}
-              onClick={() => navigate("-1")}
-            />
-            <h3>내 활동</h3>
-          </StDiv>
+  useEffect(() => {
+    dispatch(__lead());
+  }, []);
 
-          <Box style={{ width: "90%", margin: "auto" }}>
-            <Box style={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
-                <Tab label="내 모임 관리" {...a11yProps(0)} />
-                <Tab label="참여 신청 내역 보기" {...a11yProps(1)} />
-              </Tabs>
-            </Box>
+  return (
+    <>
+      <Stcontainer>
+        <StDiv style={{ justifyContent: "flex-start" }}>
+          <img
+            alt="뒤로가기"
+            src={process.env.PUBLIC_URL + "/img/backspace.png"}
+            style={{ width: "25px", height: "25px", marginRight: "10px" }}
+            onClick={() => navigate("/mypage")}
+          />
+          <h3>내 활동</h3>
+        </StDiv>
 
-            <TabPanel value={value} index={0}>
-              <Container>
-                <ListContainer>
-                  {wishlist?.map((wishlist) => {
-                    return (
-                      <CardWrapper
-                        key={wishlist.id}
-                        onClick={() => {
-                          navigate(`/detail/${wishlist.id}`);
-                        }}
-                      >
-                        <DescContainer>
-                          <TitleWrapper>
-                            <Circle>
-                              <img src={imgUrl} />
-                            </Circle>
-                            <Title>
-                              {wishlist.nickname} 님이{" "}
-                              <div style={{ fontWeight: "600" }}>
-                                {wishlist.title}
-                              </div>{" "}
-                              모임에 참여를 신청했습니다.
-                            </Title>
-                          </TitleWrapper>
-                          <Btn>
-                            <CheckButton>신청 확인 하기</CheckButton>
-                          </Btn>
-                        </DescContainer>
-                      </CardWrapper>
-                    );
-                  })}
-                </ListContainer>
-              </Container>
-            </TabPanel>
-
-            <TabPanel value={value} index={1}>
-              참여 신청 내역
-            </TabPanel>
+        <Box sx={{ width: "90%", margin: "auto" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="내 모임 관리" {...a11yProps(0)} />
+              <Tab label="참여 신청 내역 보기" {...a11yProps(1)} />
+            </Tabs>
           </Box>
-        </Stcontainer>
-      </>
-    );
+
+          {/* 내 모임 관리 탭*/}
+          <TabPanel value={value} index={0}>
+            <Container>
+              <ListContainer>
+                {leadlist?.map((leadlist) => {
+                  return (
+                    <CardWrapper>
+                      <DescContainer>
+                        <TitleWrapper>
+                          <Circle>
+                            <img src={imgUrl} />
+                          </Circle>
+                          <Title>
+                            {leadlist.nickname} 님이{" "}
+                            <div
+                              style={{
+                                fontWeight: "600",
+                                width: "60px", //확인
+                                padding: "0 5px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {leadlist.title}
+                            </div>{" "}
+                            모임에 참여를 신청했습니다.
+                          </Title>
+                        </TitleWrapper>
+                        <Btn>
+                          <CheckButton
+                          // key={leadlist.postId}
+                          // onClick={() => {
+                          //   navigate(`/detail/${leadlist.postId}`);
+                          // }}
+
+                          // 바꿔야함
+                          >
+                            신청 확인 하기
+                          </CheckButton>
+                        </Btn>
+                      </DescContainer>
+                    </CardWrapper>
+                  );
+                })}
+              </ListContainer>
+            </Container>
+          </TabPanel>
+
+          {/* 참여 신청 내역 탭*/}
+          <TabPanel value={value} index={1}>
+            <Container>
+              <ListContainer>
+                <div>참여신청내역</div>
+              </ListContainer>
+            </Container>
+          </TabPanel>
+        </Box>
+      </Stcontainer>
+    </>
+  );
 }
 
 
@@ -142,6 +163,7 @@ const StDiv = styled.div`
   margin: 0 auto;
   margin-top: 70px;
 `
+
 
 const Stcontainer = styled.div`
   display: flex;
@@ -173,16 +195,71 @@ const CardWrapper = styled.div`
   cursor: pointer;
   :hover {
     filter: brightness(90%);
-    box-shadow: 1px 1px 3px 0 #bcd7ff;
+    /* box-shadow: 1px 1px 3px 0 #bcd7ff; */
   }
 `
+
+const ImageContainer = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  img {
+    display: flex;
+    width: 100px;
+    height: 115px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+`
+
+const DescContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+`
+
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 7px;
+  margin-bottom: 7px;
+`
+
+const Title = styled.div`
+  font-size: 13px;
+  font-family: "NotoSansKR";
+  display: flex;
+`
+
+const RestDay = styled.div`
+  font-size: 11px;
+  /* background-color: #f0f0f0; */
+  /* border-radius: 1px; */
+  color: #1e88e5;
+  margin: 0 15px 0 0;
+`;
+
+
+const Circle = styled.div`
+  display: flex;
+  width: 21px;
+  height: 21px;
+  margin-right: 7px;
+  border-radius: 100%;
+  border: 1px solid gray;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+  }
+`;
 
 const Btn = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 7px;
   margin-bottom: 5px;
-`
+`;
 
 const CheckButton = styled.button`
   height: 40px;
@@ -200,39 +277,5 @@ const CheckButton = styled.button`
   :hover {
     filter: brightness(95%);
   }
-`
+`;
 
-const DescContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-
-`
-
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 0 auto;
-  margin-top: 7px;
-  margin-bottom: 7px;
-`
-
-const Circle = styled.div`
-  display: flex;
-  width: 21px;
-  height: 21px;
-  margin-right: 7px;
-  border-radius: 100%;
-  border: 1px solid gray;
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 100%;
-  }
-`
-
-const Title = styled.div`
-  font-size: 13px;
-  font-family: "NotoSansKR";
-  display: flex;
-`
