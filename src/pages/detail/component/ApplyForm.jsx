@@ -152,6 +152,7 @@ const StTextarea = styled.textarea`
 `;
 
 const ApplyTitleDiv = styled.div`
+  max-width: 375px;
   background-color: #d9d9d9;
   display: flex;
   flex-direction: column;
