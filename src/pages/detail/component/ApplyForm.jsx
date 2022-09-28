@@ -1,145 +1,188 @@
-import React from 'react';
+import React, { useRef, useState, useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { __detail } from '../../../redux/modules/detail';
 
 
 const ApplyForm = () => {
   const navigate = useNavigate();
+  const params_id = useParams().id;
+  const dispatch = useDispatch();
   
+  const { detail } = useSelector((state)=> state.detail);
+
+  const initialState = {
+    content: '',
+  }
+  const [content, setContent] = useState(initialState);
+
+  useEffect(()=>{
+    dispatch(__detail(params_id))
+  },[])
+
+  const onEditHandler = async (e) => {
+    e.preventDefault();
+    if (content.content.trim() === '') {
+      return alert('내용을 입력해야 지원이 가능합니다.')
+    }
+    if (window.confirm('모임에 지원하시겠습니까?')) {
+      try {
+        const response = await axios.post(`http://13.125.229.126:8080/post/application/${detail.id}`, content, {
+          headers: {
+            authorization: localStorage.getItem("ACCESSTOKEN"),
+            refreshtoken: localStorage.getItem("REFRESHTOKEN")
+          }
+        });
+            
+        if (response.data.success === true) {
+            alert(response.data.data);
+            setContent(initialState);
+            return navigate(`/detail/${detail.id}`);
+        };
+        if (response.data.success === false) {
+            alert(response.data.error.message);
+            return
+        };
+      } catch (error) {
+        console.log(error);
+      };
+    };
+  };
 
   return (
-    <>
-    <Stcontainer>
-    <StDiv style={{justifyContent:'flex-start'}}>
-        <img
-          alt='뒤로가기'
-          src='img/backspace.png'
-          style={{ width: '25px', height: '25px', marginRight:'10px' }}
-          onClick={() => navigate('-1')}
-        />
-        <h3>지원 신청하기</h3>
-      </StDiv>
+    <StContainer>
+      <Item2Form onSubmit={onEditHandler}>
 
-    <Body>
-      <ApplyTitle>
-        <p> 모임명</p>
-        <div> 영화 볼 사람</div>
-      </ApplyTitle>
-        <p>나를 소개해주세요</p>
-      <Textarea
-          placeholder='나를 소개하는 이야기를 입력해주세요.' />
-    </Body>
-    </Stcontainer>
-    <Btn>
-      <BackButton onClick={() => {navigate(-1);}}>이전으로</BackButton>
-      <OkButton>확인</OkButton>
-    </Btn>  
-      </>
+        <StDiv>
+          <img
+            alt='뒤로가기'
+            src={`${process.env.PUBLIC_URL}/img/backspace.png`}
+            style={{ width: '25px', height: '25px', marginRight:'10px' }}
+            onClick={() => navigate(-1)}
+          />
+          <h3>참여 신청하기</h3>
+        </StDiv>
+
+        <ApplyTitleDiv>
+          <div> 지원할 모임명</div>
+          <h4>{detail.title}</h4>
+        </ApplyTitleDiv>
+        
+        <StDiv style={{flexDirection:'column', alignItems:"flex-start"}}>
+            <h4 style={{marginLeft:'10px'}}>나를 소개해주세요</h4>
+            <StTextarea
+              cols='27'
+              rows='10'
+                value={content.content}
+                name='content'
+                maxLength={250}
+                onChange={(e) => setContent({content: e.target.value})}
+                placeholder='나를 소개하는 이야기를 입력해주세요. (250자 이내)' 
+            />
+        </StDiv>
+
+        <BtnsDiv>
+          <StButton
+          type='button' 
+          style={{backgroundColor:'#D9D9D9'}}
+          onClick={() => {
+            if (window.confirm('입력하신 사항은 저장되지 않습니다.\n지원을 취소하시겠습니까?')) {
+              navigate(-1);
+              setContent(initialState);
+            }
+            }}>
+            이전으로
+          </StButton>
+          <StButton 
+          type='submit'
+          style={{backgroundColor:'#2196F3'}}>
+            확인
+          </StButton>
+        </BtnsDiv>
+
+      </Item2Form>
+    </StContainer>
   )
-}
+};
 
 export default ApplyForm
 
-const StDiv = styled.div`
-  width: 335px;
-  display: flex;
-  justify-content: space-between;
+const StContainer = styled.div`
+  display: grid;
   align-items: center;
+  justify-content: center;
+  padding: 10px;
   margin: 0 auto;
-  margin-top: 70px;
+  grid-template-areas: 'a';
+`;
 
-    /* border: 1px solid transparent;
-    width: 30px;
-    height: 30px;
-    font-weight: bold;
-    border-radius: 100%;
-    color: #ffffff;
-    background-color: #18a0fb; */
-`
+const Item2Form = styled.form`
+  /* background-color: yellow; */
+  grid-area: a;
+  min-width: 375px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+`;
 
-const Stcontainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-`
+const StDiv = styled.div`
+  min-width: 100%;
+  max-width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+`;
 
-const Body = styled.div`
-  height: 300px;
-  p {
-        font-size: 11px;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 5px;
-      }
+const StTextarea = styled.textarea`
+  font-family: 'Noto Sans KR', sans-serif;
+  width: 100%;
+  height: 200px;
+  margin-top: 10px;
+  padding-left: 10px;
+  border: transparent;
+  border-bottom: 1px solid grey;
+  :focus {
+    outline: none;
+    border-color: #18a0fb;
+    box-shadow: 0 0 5px #18a0fb;
+  }
+`;
 
-`
-
-const ApplyTitle = styled.h4`
-    border: 1px solid transparent;
-    background-color:#D9D9D9;
-    color: black;
-    padding: 12px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-      div {
-        font-size: 15px;
-        font-weight: bold;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-bottom: 7px;
-        }
-`
-
-const Textarea = styled.textarea`
-  box-sizing: border-box;
-  width: 237px;
-  min-height: 150px;
-  outline: none;
-  border-radius: 3px;
+const ApplyTitleDiv = styled.div`
+  background-color: #d9d9d9;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
   padding: 12px;
-  font-size: 14px;
-  border: 1px solid grey;
-    :focus {
-      outline: none;
-      border-color: #18a0fb;
-      box-shadow: 0 0 5px #18a0fb;
-    }
-`
-const Btn = styled.div`
+  color: black;
+  div {
+    font-size: 15px;
+    font-weight: bold;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-`
-const BackButton = styled.button`
-    height: 40px;
-    width: 113px;
-    padding: 0 10px;
-    margin-top: 20px;
-    margin-right: 5px;
-    border: transparent;
-    border-radius: 5px;
-    outline: none;
-    background-color:#D9D9D9;
-    color:white;
-    cursor: pointer;
-    :hover {
-        filter: brightness(95%);}
-`  
-const OkButton = styled.button`
-    height: 40px;
-    width: 113px;
-    padding: 0 10px;
-    margin-top: 20px;
-    margin-left: 5px;
-    border: transparent;
-    border-radius: 5px;
-    outline: none;
-    background-color: #2196F3;
-    color:white;
-    cursor: pointer;
-    :hover {
-        filter: brightness(95%);}
-`
+    margin-top: 10px;
+  }
+`;
+
+const BtnsDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StButton = styled.button`
+  height: 45px;
+  width: 150px;
+  margin: 20px 5px 0 5px;
+  border: transparent;
+  border-radius: 6px;
+  font-size: 15px;
+  color: white;
+  cursor: pointer;
+  :hover {
+    filter: brightness(90%);
+    box-shadow: 1px 1px 3px 0 #bcd7ff;
+  }
+`;

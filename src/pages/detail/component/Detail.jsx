@@ -152,7 +152,7 @@ const Detail = () => {
                   <StBtn
                   onClick={()=>navigate(`/detail/${detail.id}/apply`)}
                   >
-                  신청하기
+                  참여 신청하기
                   </StBtn>
                 )
               )}
