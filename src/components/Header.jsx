@@ -77,7 +77,7 @@ const Header = () => {
         {isOpen === false ? null 
         :
         <Menu>
-          <MenuText onClick={()=>navigate('/mypage')}><span class="highlight">마이페이지</span></MenuText>
+          <MenuText onClick={()=>navigate('/mypage')}><span className="highlight">마이페이지</span></MenuText>
           <MenuText onClick={siteLogout}>로그아웃</MenuText>
         </Menu>
         }

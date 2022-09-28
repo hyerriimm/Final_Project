@@ -56,4 +56,5 @@ align-items: center;
 font-size: 18px;
 font-weight: bold;
 color: #FEE500;
+margin-top: 50px;
 `;
