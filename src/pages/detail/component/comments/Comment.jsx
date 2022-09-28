@@ -52,7 +52,7 @@ const Comment = () => {
   };
 
   const commentItems = commentList.map((item) => {
-    console.log(item);
+    // console.log(item);
     return (
       <CommentItem
         item={item}

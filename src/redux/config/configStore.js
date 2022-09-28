@@ -4,6 +4,7 @@ import cardlist from "../modules/cardlist";
 import detail from "../modules/detail";
 import gatheringlist from "../modules/gatheringlist"
 import wishlist from "../modules/wishlist";
+import application from "../modules/application"
 
 
 
@@ -13,7 +14,8 @@ const store = configureStore({
        cardlist,
        gatheringlist,
        detail,
-       wishlist
+       wishlist,
+       application
     },
         
     middleware: (getDefaultMiddleware) => 
