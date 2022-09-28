@@ -15,7 +15,7 @@ const Comment = () => {
   const getCommentList = async () => {
     const _commentList = await dispatch(getComments(id));
 
-    if (_commentList.payload.data.length > 0) {
+    if (_commentList.payload.data?.length > 0) {
       setCommentList(_commentList.payload.data);
     }
   };
@@ -52,7 +52,7 @@ const Comment = () => {
   };
 
   const commentItems = commentList.map((item) => {
-    console.log(item);
+    // console.log(item);
     return (
       <CommentItem
         item={item}
