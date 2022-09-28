@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
-import { __parti } from '../../../redux/modules/partilist'
+import { __parti, __lead } from '../../../redux/modules/gatheringlist'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 2 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -53,57 +53,86 @@ export default function BasicTabs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const list = useSelector((state) => state.partilist.cardlist)
-  
-  // console.log(list)
+  const partilist = useSelector((state) => state.gatheringlist.partilist)
+  const leadlist = useSelector((state) => state.gatheringlist.leadlist)
 
-  useEffect(()=> {
+  useEffect(() => {
     dispatch(__parti());
   }, []);
 
-    return (
-      <Box sx={{ width: '90%', margin: 'auto' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="내가 만든 모임" {...a11yProps(0)} />
-            <Tab label="내가 참여한 모임" {...a11yProps(1)} />
-          </Tabs>
-        </Box>
-        <TabPanel value={value} index={0}>
-          <Container>
-            <ListContainer>
-              {list?.map((list) => {
-                return (
-                  <CardWrapper key={list.postId} onClick={() => { navigate(`/detail/${list.postId}`) }}>
-                    <ImageContainer>
-                      <img src={list.imgUrl} alt="" />
-                    </ImageContainer>
-                    <DescContainer>
-                      <TitleWrapper>
-                        <Title>{list.title}</Title>
-                        <RestDay>
-                          {list.restDay.split("일")[0] <= 0 ? (
-                            <p style={{ color: '#e51e1e' }}>마감 완료</p>
-                          ) : (
-                            <p>마감 {list.restDay}</p>
-                          )}
-                        </RestDay>
-                      </TitleWrapper>
-                      <Address>{list.address}</Address>
-                      <Dday>{list.dday}</Dday>
-                    </DescContainer>
-                  </CardWrapper>
-                );
-              })}
-            </ListContainer>
-          </Container>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
+  useEffect(() => {
+    dispatch(__lead());
+  }, []);
+
+  return (
+    <Box sx={{ width: '90%', margin: 'auto' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label="내가 만든 모임" {...a11yProps(0)} />
+          <Tab label="내가 참여한 모임" {...a11yProps(1)} />
+        </Tabs>
       </Box>
-    );
-  }
+      <TabPanel value={value} index={0}>
+        <Container>
+          <ListContainer>
+            {leadlist?.map((leadlist) => {
+              return (
+                <CardWrapper key={leadlist.postId} onClick={() => { navigate(`/detail/${leadlist.postId}`) }}>
+                  <ImageContainer>
+                    <img src={leadlist.imgUrl} alt="" />
+                  </ImageContainer>
+                  <DescContainer>
+                    <TitleWrapper>
+                      <Title>{leadlist.title}</Title>
+                      <RestDay>
+                        {leadlist.restDay.split("일")[0] <= 0 ? (
+                          <div style={{ color: '#e51e1e' }}>마감 완료</div>
+                        ) : (
+                          <div>마감 {leadlist.restDay}</div>
+                        )}
+                      </RestDay>
+                    </TitleWrapper>
+                    <Address>{leadlist.address}</Address>
+                    <Dday>{leadlist.dday}</Dday>
+                  </DescContainer>
+                </CardWrapper>
+              );
+            })}
+          </ListContainer>
+        </Container>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <Container>
+          <ListContainer>
+            {partilist?.map((partilist) => {
+              return (
+                <CardWrapper key={partilist.postId} onClick={() => { navigate(`/detail/${partilist.postId}`) }}>
+                  <ImageContainer>
+                    <img src={partilist.imgUrl} alt="" />
+                  </ImageContainer>
+                  <DescContainer>
+                    <TitleWrapper>
+                      <Title>{partilist.title}</Title>
+                      <RestDay>
+                        {partilist.restDay.split("일")[0] <= 0 ? (
+                          <div style={{ color: '#e51e1e' }}>마감 완료</div>
+                        ) : (
+                          <div>마감 {partilist.restDay}</div>
+                        )}
+                      </RestDay>
+                    </TitleWrapper>
+                    <Address>{partilist.address}</Address>
+                    <Dday>{partilist.dday}</Dday>
+                  </DescContainer>
+                </CardWrapper>
+              );
+            })}
+          </ListContainer>
+        </Container>
+      </TabPanel>
+    </Box>
+  );
+}
 
 const Container = styled.div`
     display: flex;

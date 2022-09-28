@@ -2,7 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import { user } from "../modules/user";
 import cardlist from "../modules/cardlist";
 import detail from "../modules/detail";
-import partilist from "../modules/partilist"
+import gatheringlist from "../modules/gatheringlist"
+import wishlist from "../modules/wishlist";
 import application from "../modules/application"
 
 
@@ -11,8 +12,9 @@ const store = configureStore({
     reducer: { 
        user: user.reducer,
        cardlist,
-       partilist,
+       gatheringlist,
        detail,
+       wishlist,
        application
     },
         
