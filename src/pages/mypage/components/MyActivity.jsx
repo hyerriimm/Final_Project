@@ -6,7 +6,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useDispatch, useSelector } from "react-redux";
-import { __parti } from "../../../redux/modules/partilist";
+import { __parti } from "../../../redux/modules/gatheringlist";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 

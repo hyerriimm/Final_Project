@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { createComment, getComments } from "../../../../redux/modules/comment";
 import CommentItem from "./CommentItem";
 
-
 const Comment = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -16,22 +15,15 @@ const Comment = () => {
   const getCommentList = async () => {
     const _commentList = await dispatch(getComments(id));
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 2da6012eec6a8f0aaa0c77b10c25e9fe131a5fa4
     if (_commentList.payload?.data?.length > 0) {
       setCommentList(_commentList.payload.data);
     }
-  }; 
+  };
 
-  
   useEffect(() => {
     getCommentList();
   }, []);
 
-
-  //댓글 작성
   const submit = async () => {
     if (!comment) {
       alert("댓글을 입력해주세요.");
@@ -60,7 +52,7 @@ const Comment = () => {
   };
 
   const commentItems = commentList.map((item) => {
-   // console.log(item);
+    // console.log(item);
     return (
       <CommentItem
         item={item}
@@ -69,7 +61,6 @@ const Comment = () => {
       ></CommentItem>
     );
   });
-
 
   return (
     <>
@@ -93,8 +84,6 @@ const Comment = () => {
   );
 };
 
-
-
 export default Comment;
 
 const Comments = styled.div`
@@ -115,7 +104,6 @@ const Layout = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 70px;
 `;
 
 const Stcontainer = styled.div`

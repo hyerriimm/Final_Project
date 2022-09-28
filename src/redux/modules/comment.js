@@ -15,10 +15,7 @@ export const getComments = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
-<<<<<<< HEAD
-      
-=======
->>>>>>> 2da6012eec6a8f0aaa0c77b10c25e9fe131a5fa4
+
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

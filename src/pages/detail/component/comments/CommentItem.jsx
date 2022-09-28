@@ -7,6 +7,7 @@ import {
   updateComment,
 } from "../../../../redux/modules/comment";
 
+
 const CommentItem = ({ item, getCommentList }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
