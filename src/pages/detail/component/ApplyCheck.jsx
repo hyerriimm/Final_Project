@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -11,7 +11,7 @@ const ApplyCheck = () => {
   const params_id = useParams().id;
   const dispatch = useDispatch();
   const { applicants, detailTitle } = useSelector((state) => state.application);
-  console.log(applicants);
+  // console.log(applicants);
   // content 지원내용
   // applicationId 신청할 떄 들어가는 고유 아이디
   // postId
@@ -20,19 +20,9 @@ const ApplyCheck = () => {
   // state "WAIT" "APPROVED" "DENIED"
   // console.log(detailTitle);
 
-  // useState를 사용하여 open상태를 변경한다. (open일때 true로 만들어 열리는 방식)
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalConent] = useState();
-  const [modalNickname, setModalNickname] = useState();
-  const [modalApplicationId, setModalApplicationId] = useState();
-  const [modalState, setModalState] = useState();
-
-  const openModal = () => {
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  useEffect(() => {
+    dispatch(__getApplication(params_id));
+  }, [applicants.length]);
   
   const onClickRefuseBtn = (nickname, applicationId) => {
     if (window.confirm(`${nickname}님의 신청을 거절하시겠습니까?`)) {
@@ -48,9 +38,73 @@ const ApplyCheck = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(__getApplication(params_id));
-  }, []);
+  const Cards = ({eachApplicant}) => {
+      // useState를 사용하여 open상태를 변경한다. (open일때 true로 만들어 열리는 방식)
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const openModal = () => {
+      setModalOpen(true);
+    };
+    const closeModal = () => {
+      setModalOpen(false);
+    };
+    
+    return (
+      <div>
+        { eachApplicant.state !== "WAIT" ? (
+          eachApplicant.state !== "APPROVED" ? (
+        <DENIEDCard onClick={openModal}>
+          <Body>
+            <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
+            <StP>
+              <span style={{color:'#ff0000'}}>{eachApplicant.nickname}</span> 님의 신청이 <span style={{color:'#ff0000'}}>거절</span>되었습니다.
+            </StP>
+          </Body>
+        </DENIEDCard>
+          ): (
+          <APPROVEDCard onClick={openModal}>
+            <Body>
+              <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
+              <StP>
+                <span>{eachApplicant.nickname}</span> 님의 신청이 <span>승인</span>되었습니다.
+              </StP>
+            </Body>
+          </APPROVEDCard>
+          )
+        ) : (
+          <Card>
+          <Body>
+            <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
+            <StP>
+              <span>{eachApplicant.nickname}</span> 님이  <span>{detailTitle}</span>
+              모임에 참여를 신청했습니다.
+            </StP>
+          </Body>
+          <BtnsDiv>
+            <StButton
+            onClick={openModal}
+            style={{backgroundColor:'#2196F3'}}>
+            지원내용 확인하기
+            </StButton>
+          </BtnsDiv>
+        </Card>
+        ) }
+          <ModalOfApplyCheck 
+            open={modalOpen} 
+            close={closeModal} 
+            header={`지원자 ${eachApplicant.nickname}`}
+            nickname={eachApplicant.nickname}
+            applicantStatus={eachApplicant.state}
+            applicationId={eachApplicant.applicationId}
+            onClickRefuseBtn={onClickRefuseBtn}
+            onClickAcceptBtn={onClickAcceptBtn}
+            >
+              {/* Modal.js의  <main> {props.children} </main>에 내용이 입력된다.  */}
+              {eachApplicant.content}
+          </ModalOfApplyCheck>
+      </div>
+    );
+  };
   
   return (
     <StContainer>
@@ -68,86 +122,9 @@ const ApplyCheck = () => {
           <div>모임명</div>
           <div> {detailTitle} </div>
         </ApplyTitleDiv>
-        {applicants.map((eachApplicant) => {
-          return (
-            <div key={uuidv4()}>
-              { eachApplicant.state !== "WAIT" ? (
-                eachApplicant.state !== "APPROVED" ? (
-              <DENIEDCard
-              onClick={()=>{
-                openModal(); 
-                setModalConent(eachApplicant.content); 
-                setModalNickname(eachApplicant.nickname);
-                setModalApplicationId(eachApplicant.applicationId);
-                setModalState(eachApplicant.state);
-                }}
-              >
-                <Body>
-                  <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
-                  <StP>
-                    <span style={{color:'#ff0000'}}>{eachApplicant.nickname}</span> 님의 신청이 <span style={{color:'#ff0000'}}>거절</span>되었습니다.
-                  </StP>
-                </Body>
-              </DENIEDCard>
-                ): (
-                <APPROVEDCard
-                onClick={()=>{
-                  openModal(); 
-                  setModalConent(eachApplicant.content); 
-                  setModalNickname(eachApplicant.nickname);
-                  setModalApplicationId(eachApplicant.applicationId);
-                  setModalState(eachApplicant.state);
-                  }}
-                >
-                  <Body>
-                    <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
-                    <StP>
-                      <span>{eachApplicant.nickname}</span> 님의 신청이 <span>승인</span>되었습니다.
-                    </StP>
-                  </Body>
-                </APPROVEDCard>
-                )
-              ) : (
-                <Card>
-                <Body>
-                  <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
-                  <StP>
-                    <span>{eachApplicant.nickname}</span> 님이  <span>{detailTitle}</span>
-                    모임에 참여를 신청했습니다.
-                  </StP>
-                </Body>
-                <BtnsDiv>
-                  <StButton
-                  style={{backgroundColor:'#2196F3'}}
-                  onClick={()=>{
-                    openModal(); 
-                    setModalConent(eachApplicant.content); 
-                    setModalNickname(eachApplicant.nickname);
-                    setModalApplicationId(eachApplicant.applicationId);
-                    setModalState(eachApplicant.state);
-                    }}>
-                  지원내용 확인하기
-                  </StButton>
-                </BtnsDiv>
-              </Card>
-              ) }
-                <ModalOfApplyCheck 
-                  open={modalOpen} 
-                  close={closeModal} 
-                  header={`지원자 ${modalNickname}`}
-                  nickname={modalNickname}
-                  applicantStatus={modalState}
-                  applicationId={modalApplicationId}
-                  onClickRefuseBtn={onClickRefuseBtn}
-                  onClickAcceptBtn={onClickAcceptBtn}
-                  >
-                    {/* Modal.js의  <main> {props.children} </main>에 내용이 입력된다.  */}
-                    {/* {eachApplicant.content} */}
-                    {modalContent}
-                </ModalOfApplyCheck>
-            </div>
-          );
-        })}
+        {applicants.map((eachApplicant) => 
+          <Cards key={uuidv4()} eachApplicant={eachApplicant} />
+        )}
       </Item1>
     </StContainer>
   );
