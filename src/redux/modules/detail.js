@@ -10,7 +10,12 @@ export const __detail = createAsyncThunk(
     "detail/__detail", 
     async (payload, thunkAPI) => { 
         try {
-            const data = await axios.get(`http://13.125.229.126:8080/post/detail/${payload}`);
+            const data = await axios.get(`http://13.125.229.126:8080/post/detail/${payload}`, {
+            headers: {
+              authorization: localStorage.getItem("ACCESSTOKEN"),
+              refreshtoken: localStorage.getItem("REFRESHTOKEN")
+            }
+          });
             return thunkAPI.fulfillWithValue(data.data.data);
         } catch (error) {
           return thunkAPI.rejectWithValue(error);
@@ -87,9 +92,9 @@ export const __removeWish = createAsyncThunk(
 export const detail = createSlice({
   name: 'detail',
   initialState: {
-    detail: {},
+    detail: [],
     detail_wishPeople:[],
-    wishData: {},
+    wishData: [],
     error: null,
     isLoading: false,
   },

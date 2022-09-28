@@ -9,13 +9,12 @@ import { FiEdit } from "react-icons/fi";
 import { __detail, __delete, __addWish, __removeWish } from '../../../redux/modules/detail';
 
 const Detail = () => {
-  // console.log('렌더링이 몇 번 되는거임...?');
   const navigate = useNavigate();
   const params_id = useParams().id;
   const dispatch = useDispatch();
   const { pathname } = useLocation(); // 스크롤을 맨 위로
 
-  const { detail, detail_wishPeople } = useSelector((state)=> state.detail);
+  const { detail, isLoading } = useSelector((state)=> state.detail);
   const logIn = localStorage.getItem("ACCESSTOKEN");
   const Id = localStorage.getItem("Id");
 // console.log(detail);
@@ -36,14 +35,16 @@ const Detail = () => {
 //   title 게시글 제목
 //   currentNum 현재 모집된 인원
 //   wishPeople: [] 게시물 찜한 사람들 아이디
+//   wish 찜 했는지 아닌지 boolean
 
   // wishBoolean: 찜명단에서 내 아이디과 일치하는 게 있으면 true, 아니면 false
-  const wishBoolean = detail_wishPeople.includes(Id);
-  const [isWish, setIsWish] = useState();
+  // const wishBoolean = detail_wishPeople?.includes(Id);
   // console.log("wishBoolean은  ",wishBoolean);
   // console.log("isWish는 ",isWish);
-
+  
   // 찜 기능
+  let [isWish, setIsWish] = useState();
+
   const onClickWishBtn = () => {
     setIsWish(!isWish);
     if (!isWish) {
@@ -62,14 +63,21 @@ const Detail = () => {
   };
 
   useEffect(()=>{
-    setIsWish(wishBoolean);
-  },[wishBoolean]);
+    setIsWish(detail.wish);
+  },[detail.wish]);
   
   useEffect(()=>{
       window.scrollTo(0, 0); // 스크롤 맨 위로
       dispatch(__detail(params_id));
     },[pathname])
 
+  if (isLoading) {
+    return <Loading>
+      <img alt='로딩중'
+    src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921'
+    />
+      </Loading>
+  }
     
   return (
     <div>
