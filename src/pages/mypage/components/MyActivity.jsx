@@ -55,8 +55,8 @@ export default function BasicTabs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const wish = useSelector((state) => state.partilist.cardlist);
-  console.log(wish);
+  const wishlist = useSelector((state) => state.partilist.cardlist);
+  console.log(wishlist);
 
   const imgUrl = localStorage.getItem("ImgURL");
 
@@ -92,12 +92,12 @@ export default function BasicTabs() {
             <TabPanel value={value} index={0}>
               <Container>
                 <ListContainer>
-                  {wish?.map((wish) => {
+                  {wishlist?.map((wishlist) => {
                     return (
                       <CardWrapper
-                        key={wish.id}
+                        key={wishlist.id}
                         onClick={() => {
-                          navigate(`/detail/${wish.id}`);
+                          navigate(`/detail/${wishlist.id}`);
                         }}
                       >
                         <DescContainer>
@@ -106,9 +106,9 @@ export default function BasicTabs() {
                               <img src={imgUrl} />
                             </Circle>
                             <Title>
-                              {wish.nickname} 님이{" "}
+                              {wishlist.nickname} 님이{" "}
                               <div style={{ fontWeight: "600" }}>
-                                {wish.title}
+                                {wishlist.title}
                               </div>{" "}
                               모임에 참여를 신청했습니다.
                             </Title>
