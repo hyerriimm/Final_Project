@@ -1,148 +1,247 @@
-import React from 'react'
+import React, { useRef, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
+import {__getApplication, __refuse, __accept } from '../../../redux/modules/application';
+import ModalOfApplyCheck from './ModalOfApplyCheck';
 
 const ApplyCheck = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const params_id = useParams().id;
+  const dispatch = useDispatch();
+  const { applicants, detailTitle } = useSelector((state) => state.application);
+  console.log(applicants);
+  // content 지원내용
+  // applicationId 신청할 떄 들어가는 고유 아이디
+  // postId
+  // imgUrl
+  // nickname
+  // state "WAIT" "APPROVED" "DENIED"
+  // console.log(detailTitle);
 
+  // useState를 사용하여 open상태를 변경한다. (open일때 true로 만들어 열리는 방식)
+  const [modalOpen, setModalOpen] = useState(false);
 
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  
+  const onClickRefuseBtn = (nickname, applicationId) => {
+    if (window.confirm(`${nickname}님의 신청을 거절하시겠습니까?`)) {
+      dispatch(__refuse(applicationId));
+      setModalOpen(false);
+    }
+  };
+  
+  const onClickAcceptBtn = (nickname, applicationId) => {
+    if (window.confirm(`${nickname}님의 신청을 수락하시겠습니까?`)) {
+      dispatch(__accept(applicationId));
+      setModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(__getApplication(params_id));
+  }, [applicants.length]);
+  
   return (
-    <>
-    <Stcontainer>
-        <StDiv style={{justifyContent:'flex-start'}}>
-            <img
+    <StContainer>
+      <Item1>
+        <StDiv>
+          <img
             alt='뒤로가기'
-            src='img/backspace.png'
-            style={{ width: '25px', height: '25px', marginRight:'10px' }}
-            onClick={() => navigate('-1')}
-            />
-            <h3>지원 확인</h3>
-        
+            src={`${process.env.PUBLIC_URL}/img/backspace.png`}
+            style={{ width: '25px', height: '25px', marginRight: '10px' }}
+            onClick={() => navigate(-1)}
+          />
+          <h3>지원 확인</h3>
         </StDiv>
-        <Card>
-            <Body>
-                <img />
-                <p>
-                    닉네임1 님이 영화보러 갈 사람 모아봅니다 모임에 참여를 신청했습니다. 
-                </p>
-            </Body>
-                <Btn>
-                    <AcceptButton>수락</AcceptButton>
-                    <RefuseButton>거절</RefuseButton>
-                </Btn>
-         </Card>
-         <Card>
-            <Body>
-                <img />
-                <p>
-                    닉네임1 님이 영화보러 갈 사람 모아봅니다 모임에 참여를 신청했습니다. 
-                </p>
-            </Body>
-                <Btn>
-                    <AcceptButton>수락</AcceptButton>
-                    <RefuseButton>거절</RefuseButton>
-                </Btn>
-         </Card>
+        <ApplyTitleDiv>
+          <div>모임명</div>
+          <div> {detailTitle} </div>
+        </ApplyTitleDiv>
+        {applicants.map((eachApplicant) => {
+          return (
+            <div key={uuidv4()}>
+              { eachApplicant.state !== "WAIT" ? (
+                eachApplicant.state !== "APPROVED" ? (
+              <DENIEDCard>
+                <Body>
+                  <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
+                  <StP>
+                    <span style={{color:'#ff0000'}}>{eachApplicant.nickname}</span> 님의 신청이 <span style={{color:'#ff0000'}}>거절</span>되었습니다.
+                  </StP>
+                </Body>
+              </DENIEDCard>
+                ): (
+                <APPROVEDCard>
+                  <Body>
+                    <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
+                    <StP>
+                      <span>{eachApplicant.nickname}</span> 님의 신청이 <span>승인</span>되었습니다.
+                    </StP>
+                  </Body>
+                </APPROVEDCard>
+                )
+              ) : (
+                <Card>
+                <Body>
+                  <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
+                  <StP>
+                    <span>{eachApplicant.nickname}</span> 님이  <span>{detailTitle}</span>
+                    모임에 참여를 신청했습니다.
+                  </StP>
+                </Body>
+                <BtnsDiv>
+                  <StButton
+                  style={{backgroundColor:'#2196F3'}}
+                  onClick={openModal}>
+                  지원내용 확인하기
+                  </StButton>
+                </BtnsDiv>
+                <ModalOfApplyCheck 
+                open={modalOpen} 
+                close={closeModal} 
+                header={`지원자 ${eachApplicant.nickname}`}
+                nickname={eachApplicant.nickname}
+                applicationId={eachApplicant.applicationId}
+                onClickRefuseBtn={onClickRefuseBtn}
+                onClickAcceptBtn={onClickAcceptBtn}
+                >
+                  {/* Modal.js의  <main> {props.children} </main>에 내용이 입력된다.  */}
+                  {eachApplicant.content}
+                </ModalOfApplyCheck>
+              </Card>
+              ) }
+            </div>
+          );
+        })}
+      </Item1>
+    </StContainer>
+  );
+};
 
-         
-    </Stcontainer>
-    </>
-  )
-}
+export default ApplyCheck;
 
-export default ApplyCheck
+const StContainer = styled.div`
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin: 0 auto;
+  grid-template-areas: 'a';
+`;
 
+const Item1 = styled.div`
+  grid-area: a;
+  min-width: 375px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+`;
 
 const StDiv = styled.div`
-  width: 335px;
+  min-width: 100%;
+  max-width: 100%;
+  margin-top: 10px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
-  margin-top: 70px;
+`;
 
-    /* border: 1px solid transparent;
-    width: 30px;
-    height: 30px;
-    font-weight: bold;
-    border-radius: 100%;
-    color: #ffffff;
-    background-color: #18a0fb; */
-`
-
-const Stcontainer = styled.div`
+const ApplyTitleDiv = styled.div`
+  background-color: #d9d9d9;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-`
+  height: fit-content;
+  padding: 12px;
+  color: black;
+  div {
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10px;
+  }
+`;
 
 const Card = styled.div`
-  width: 335px;
+  width: 100%;
   height: 150px;
   border: 1px solid grey;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
-`
+`;
+
+const DENIEDCard = styled.div`
+  width: 100%;
+  max-height: 100px;
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`;
+
+const APPROVEDCard = styled.div`
+  width: 100%;
+  max-height: 100px;
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`;
 
 const Body = styled.div`
-  width: 335px;
+box-sizing: border-box;
+  width: 375px;
   height: 150px;
+  padding: 0 10px;
   display: flex;
-  justify-content: space-between;
-  
-  img {
-    width: 50px;
-    height: 40px;
-    border-radius: 100%;
-    background-color: #D9D9D9;
-    margin-top: 15px;
-    margin-right: 10px;
-    margin-left: 20px;
+  align-items: center;
+`;
+
+const StP = styled.p`
+  font-size: 15px;
+  span {
+    color: #008cff;
   }
-  p {
-    font-size: 11px;
-    margin-top: 20px;
-    margin-right: 20px;
+`;
+
+const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  margin-left: 10px;
+  margin-right: 20px;
+  border: 2px solid #bcd7ff;
+`;
+
+const BtnsDiv = styled.div`
+box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+`;
+
+const StButton = styled.button`
+word-break: keep-all;
+  height: 45px;
+  width: 150px;
+  margin: 0px 10px 20px 10px;
+  border: transparent;
+  border-radius: 6px;
+  font-size: 15px;
+  color: white;
+  cursor: pointer;
+  :hover {
+    filter: brightness(90%);
+    box-shadow: 1px 1px 3px 0 #bcd7ff;
   }
-
-`
-
-const Btn = styled.div`
-    display: flex;
-    justify-content: center;
-    
-`
-
-const AcceptButton = styled.button`
-    height: 40px;
-    width: 113px;
-    padding: 0 10px;
-    margin-bottom: 30px;
-    margin-right: 5px;
-    border: transparent;
-    border-radius: 5px;
-    outline: none;
-    background-color:#2196F3;
-    color:white;
-    cursor: pointer;
-    :hover {
-        filter: brightness(95%);}
-`  
-
-const RefuseButton = styled.button`
-    height: 40px;
-    width: 113px;
-    padding: 0 10px;
-    margin-bottom: 30px;
-    margin-left: 5px;
-    border: transparent;
-    border-radius: 5px;
-    outline: none;
-    background-color: #D9D9D9;
-    color:white;
-    cursor: pointer;
-    :hover {
-        filter: brightness(95%);}
-`
+`;
