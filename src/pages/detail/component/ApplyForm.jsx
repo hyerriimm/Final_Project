@@ -15,7 +15,7 @@ const ApplyForm = () => {
           alt='뒤로가기'
           src='img/backspace.png'
           style={{ width: '25px', height: '25px', marginRight:'10px' }}
-          onClick={() => navigate('-1')}
+          onClick={() => navigate(-1)}
         />
         <h3>지원 신청하기</h3>
       </StDiv>

@@ -124,11 +124,12 @@ const Wish = styled.button`
     width: 140px;
     margin: auto;
     text-align: center;
-    border: 0.5px solid #2196F3;
-    background-color: white;
     border-radius: 4px;
     font-size: 12px;
-    text-decoration: none; 
+    text-decoration: none;
+    border-radius: 4px;
+    border: 0.5px solid #2196F3;
+    background-color: white;
     color: #1565C0 !important;
     cursor: pointer;
     :hover {
