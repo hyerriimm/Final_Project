@@ -149,17 +149,17 @@ const Form = () => {
         />
       </StDiv>
       <MaxNumDiv>
-      <div style={{fontWeight:'bold'}}>모집 인원</div>
+      <div style={{fontWeight:'bold'}}>모집 인원 (3~5명) </div>
         <MaxNumInput
           required
           name='maxNum'
           type='text'
-          placeholder='최대 5명'
+          placeholder='3~5명'
           value={maxNum}
           maxLength={1}
           onChange={(e) =>
             setMaxNum(
-              e.target.value.replace(/[^0-9.]/g, '').replace(/(\.*)\./g, '$1')
+              e.target.value.replace(/[^3-5.]/g, '').replace(/(\.*)\./g, '$1')
             )
           }
         />
