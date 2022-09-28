@@ -9,7 +9,7 @@ const Header = () => {
     const [profileImg,setProfileImg] = useState(undefined);
     const profile = `${profileImg}` // "https://avatars.dicebear.com/api/adventurer-neutral/:seed.svg"
 
-    // const modalRef = useRef();
+    const modalRef = useRef();
     const [isOpen, setIsOpen] = useState(false);
     const handleModal = () => {
       setIsOpen(!isOpen)
@@ -21,7 +21,7 @@ const Header = () => {
         setAccesstoken(localStorage.getItem("ACCESSTOKEN"));
     },1000);
       return ()=>{clearTimeout(timeout);}
-    },[window.location.href, accesstoken, navigate]);
+    },[window.location.reload, accesstoken, navigate]);
 
     useEffect(()=>{
       setAccesstoken(localStorage.getItem("ACCESSTOKEN"));
@@ -29,19 +29,19 @@ const Header = () => {
     });
 
 
-    // useEffect(() => {
-    //   const onClickOutside = (e) => {
-    //       if (elem.current !== null && !elem.current.contains(e.target)) {
-    //           setIsOpen(!isOpen);
-    //       }
-    //   };
-    //   if (isOpen) {
-    //       window.addEventListener("click", onClickOutside);
-    //   }
-    //   return () => {
-    //       window.removeEventListener("click", onClickOutside);
-    //   };
-    // });
+    useEffect(() => {
+      const onClickOutside = (e) => {
+          if (modalRef.current !== null && !modalRef.current.contains(e.target)) {
+              setIsOpen(!isOpen);
+          }
+      };
+      if (isOpen) {
+          window.addEventListener("click", onClickOutside);
+      }
+      return () => {
+          window.removeEventListener("click", onClickOutside);
+      };
+    });
 
     const siteLogout = () => {
       if (window.confirm("로그아웃 하시겠습니까?")) {
@@ -50,7 +50,7 @@ const Header = () => {
         setProfileImg(localStorage.removeItem("ImgURL"));
         localStorage.removeItem("Id");
         alert('로그아웃 되었습니다.')
-        navigate("/");
+        window.location.reload();
       } else {
           console.log("로그인 유지");
       }
@@ -63,24 +63,23 @@ const Header = () => {
             <BtnWrapper>            
                 { accesstoken ? 
                 ( <>
-                  <Btn onClick={()=>navigate('/form')}>모임등록</Btn>
-                  <BtnProfile onClick={handleModal}>
+                  <AddBtn onClick={()=>navigate('/form')}>모임등록</AddBtn>
+                  <BtnProfile ref={modalRef} onClick={handleModal}>
                       <img src={ profile } alt="profile"/>
                   </BtnProfile>
                   </>
                 )
                 :
-                ( <><Btn onClick={()=>navigate('/login')}>로그인</Btn></>
+                ( <><LoginBtn onClick={()=>navigate('/login')}>로그인</LoginBtn></>
                 )}
             </BtnWrapper>
         </HdContainer>
         {isOpen === false ? null 
-        : <ModalBackdrop onClick={handleModal}>
+        :
         <Menu>
-          <MenuText onClick={()=>navigate('/mypage')}>마이페이지</MenuText>
+          <MenuText onClick={()=>navigate('/mypage')}><span class="highlight">마이페이지</span></MenuText>
           <MenuText onClick={siteLogout}>로그아웃</MenuText>
         </Menu>
-        </ModalBackdrop>
         }
         </>
     );
@@ -94,9 +93,12 @@ const HdContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     position: sticky;
+    top: 0;
+    opacity: 0.94;
+    backdrop-filter: blur(60px);
     width: 100%;
     margin: 0 auto;
-    height: 56px;
+    height: 55px;
     z-index: 100;
 `
 
@@ -114,14 +116,44 @@ const BtnWrapper = styled.div`
   align-items: center;
 `
 
-const Btn = styled.div`
-  margin: 0 30px 0 0;
-  text-align: center;
-  font-size: 14px;
-  font-family: 'NotoSansKR';
-  font-weight: 600;
-  cursor: pointer;
+// const  = styled.div`
+//   margin: 0 30px 0 0;
+//   text-align: center;
+//   font-size: 14px;
+//   font-family: 'NotoSansKR';
+//   font-weight: 600;
+//   cursor: pointer;
+// `
+
+const AddBtn = styled.button`
+    height: 30px;
+    width: 69px;
+    margin: 0 25px 0 0;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 1px solid #2196F3;
+    background-color: #2196F3;
+    color: white !important;
+    cursor: pointer;
 `
+const LoginBtn = styled.button`
+    height: 30px;
+    width: 65px;
+    margin: 0 30px 0 0;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 0.5px solid #2196F3;
+    background-color: white;
+    color: #1565C0 !important;
+    cursor: pointer;
+`
+
 const BtnProfile = styled.div`
   width: 30px;
   height: 30px;
@@ -139,6 +171,7 @@ const BtnProfile = styled.div`
           width: 100%;
           height: 100%;
           border-radius: 100%;
+          object-fit: cover;
       }
 `
 
@@ -149,18 +182,23 @@ const ModalBackdrop = styled.div`
 const Menu = styled.div`
     background: #fff;
     border-radius: 8px;
-    position: absolute;
+    position: fixed;
     top: 50px;
     right: 25px;
-    width: 150px;
-    padding: 20px 0 10px 0;
+    width: 128px;
+    padding: 15px 0 10px 0;
     text-align: center;
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
     z-index: 1000;
 `
 
 const MenuText = styled.div`
-    margin: 0 0 10px 0;
+    margin: 0 10px 5px 10px;
+    padding: 2px;
     font-size: 14px;
     cursor: pointer;
+    :hover {
+      background-color : #ededed;
+    }  
+
 `

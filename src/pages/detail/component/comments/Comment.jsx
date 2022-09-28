@@ -16,7 +16,10 @@ const Comment = () => {
   const getCommentList = async () => {
     const _commentList = await dispatch(getComments(id));
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2da6012eec6a8f0aaa0c77b10c25e9fe131a5fa4
     if (_commentList.payload?.data?.length > 0) {
       setCommentList(_commentList.payload.data);
     }

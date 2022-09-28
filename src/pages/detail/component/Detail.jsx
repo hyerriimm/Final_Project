@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { FiTrash2 } from "react-icons/fi";
 import { FiEdit } from "react-icons/fi";
@@ -9,12 +9,17 @@ import { FiEdit } from "react-icons/fi";
 import { __detail, __delete, __addWish, __removeWish } from '../../../redux/modules/detail';
 
 const Detail = () => {
+  // console.log('렌더링이 몇 번 되는거임...?');
   const navigate = useNavigate();
   const params_id = useParams().id;
   const dispatch = useDispatch();
+  const { pathname } = useLocation(); // 스크롤을 맨 위로
 
-  const { detail, isLoading, error, wishData } = useSelector((state)=> state.detail);
+  const { detail, detail_wishPeople } = useSelector((state)=> state.detail);
+  const logIn = localStorage.getItem("ACCESSTOKEN");
+  const Id = localStorage.getItem("Id");
 // console.log(detail);
+// console.log(detail_wishPeople);
 //   address 주소
 //   authorNickname 게시글 작성자 닉네임
 //   authorId 게시글 작성자 아이디
@@ -32,25 +37,19 @@ const Detail = () => {
 //   currentNum 현재 모집된 인원
 //   wishPeople: [] 게시물 찜한 사람들 아이디
 
-  const logIn = localStorage.getItem("ACCESSTOKEN");
-  const Id = localStorage.getItem("Id");
-  // console.log(Id);
-
-  // 찜명단에서 내 아이디과 일치하는 게 있으면 true, 아니면 false
-  let wishBoolean = detail.wishPeople?.includes(Id);
-  console.log('wishBoolean는',wishBoolean);
-  const [isWish, setIsWish] = useState((wishBoolean === true ) ? (true) : (false)); //이거 잘못됨 삼항연산자 수정 필요
-  console.log('isWish는', isWish);
+  // wishBoolean: 찜명단에서 내 아이디과 일치하는 게 있으면 true, 아니면 false
+  const wishBoolean = detail_wishPeople.includes(Id);
+  const [isWish, setIsWish] = useState();
+  // console.log("wishBoolean은  ",wishBoolean);
+  // console.log("isWish는 ",isWish);
 
   // 찜 기능
   const onClickWishBtn = () => {
-    // setIsWish(!isWish);
+    setIsWish(!isWish);
     if (!isWish) {
       dispatch(__addWish(params_id));
-      setIsWish(!isWish);
     } else {
       dispatch(__removeWish(params_id));
-      setIsWish(!isWish);
     }
   };
 
@@ -61,24 +60,16 @@ const Detail = () => {
       navigate('/');
     }
   };
+
+  useEffect(()=>{
+    setIsWish(wishBoolean);
+  },[wishBoolean]);
   
   useEffect(()=>{
-      dispatch(__detail(params_id))
-    },[wishBoolean])
+      window.scrollTo(0, 0); // 스크롤 맨 위로
+      dispatch(__detail(params_id));
+    },[pathname])
 
-// 로딩 화면
-  // if (isLoading) {
-  //   return <Loading>
-  //     <img alt='로딩중'
-  //   src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921'
-  //   />
-  //     </Loading>
-  // }
-
-// 에러 화면
-  // if (error) {
-  //   return <div>{error.message}</div>;
-  // }
     
   return (
     <div>
@@ -100,7 +91,6 @@ const Detail = () => {
         ) : false )}
         </EditnDeleteDiv>
       <Container>
-        컨테이너
         <Item1>
           <Img
           src={detail.postImgUrl}
@@ -114,7 +104,7 @@ const Detail = () => {
               <div style={{display:'flex', alignItems: 'center', justifyContent:'space-between'}}>
                 <div style={{display:'flex', alignItems: 'center'}}>
                   <ProfileImg src={ detail.memberImgUrl } alt="profile"/>
-                  <h4 style={{width:'150px'}}>{detail.author}</h4>
+                  <h4 style={{width:'150px'}}>{detail.authorNickname}</h4>
                 </div>
                 <StDiv>
                   {detail.restDay?.split("일")[0] <= 0 ? ( 
@@ -285,6 +275,7 @@ padding: 0 10px;
 margin: 0 10px;
 /* margin-right: 10px; */
 font-size: 12px;
+height: 35px;
 `;
 
 const BtnsDiv = styled.div`

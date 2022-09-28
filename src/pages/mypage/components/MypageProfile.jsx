@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,16 +6,25 @@ import { useNavigate } from 'react-router-dom';
 const MypageProfile = () => {
 
     const navigate = useNavigate();
-  
+    const [profileImg,setProfileImg] = useState(undefined);
+    const [Id, setId] = useState(undefined);
+    const profile = `${profileImg}`
+
+    useEffect(()=>{
+        setProfileImg(localStorage.getItem("ImgURL"));
+        setId(localStorage.getItem("Id"));
+      });
     
     return (
         <>
             <Container>
                 <ProfileWrapper>
-                    <Profile />
+                    <Profile> 
+                        <img src={ profile } alt="profile"/>
+                    </Profile>
                     <DescWrapper>
                         <StNickName>닉네임</StNickName>
-                        <StId>아이디</StId>
+                        <StId>{ Id }</StId>
                     </DescWrapper>
                 </ProfileWrapper>
                 <EditBtn onClick={() => { navigate('/mypage/infoedit')}}>계정수정</EditBtn>
@@ -35,25 +44,27 @@ const Container = styled.div`
     justify-content: center;
     width: 100vw;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 30px;
     /* border: 1px solid black */
 `
 
 const ProfileWrapper = styled.div`
     display: flex;
-    width: 50vw;
+    width: 60vw;
+    max-width: 450px;
     /* border: 1px solid black */
 `
 
 const Profile = styled.div`
-  width: 55px;
-  height: 55px;
+  width: 70px;
+  height: 70px;
   border-radius: 100%;
-  border: 1px solid #d7d7d7;
+  border: 0.5px solid #ededed;
       img {
           width: 100%;
           height: 100%;
           border-radius: 100%;
+          object-fit: cover;
       }
 `
 
@@ -62,7 +73,7 @@ const DescWrapper = styled.div`
     flex-direction: column;
     height: 100%;
     justify-content: center;
-    margin-left: 20px;
+    margin-left: 25px;
     /* border: 1px solid black */
 
 `
@@ -88,8 +99,11 @@ const EditBtn = styled.button`
     width: 70px;
     font-size: 12px;
     border: 0px;
-    margin: 10px 0 0 0;
+    margin: 20px 0 0 0;
     cursor: pointer;
+    :hover {
+        background-color: #e0e0e0;
+         }
 `
 
 const BtnSet = styled.div`
@@ -98,7 +112,7 @@ const BtnSet = styled.div`
     height: 38px;
     width: 300px;
     margin: auto;
-    margin-top: 15px;
+    margin-top: 20px;
     margin-bottom: 20px;
     /* border: 0.5px solid lightgray; */
     border-radius: 4px;
@@ -110,13 +124,18 @@ const Wish = styled.button`
     width: 140px;
     margin: auto;
     text-align: center;
-    border: 0.5px solid #2196F3;
-    background-color: white;
     border-radius: 4px;
     font-size: 12px;
-    text-decoration: none; 
+    text-decoration: none;
+    border-radius: 4px;
+    border: 0.5px solid #2196F3;
+    background-color: white;
     color: #1565C0 !important;
     cursor: pointer;
+    :hover {
+        background-color: #2196F3;
+        color: white !important;
+         }    
 `
 
 const Activity = styled.button`
@@ -131,4 +150,8 @@ const Activity = styled.button`
     text-decoration: none; 
     color: #1565C0 !important;
     cursor: pointer;
+    :hover {
+        background-color: #2196F3;
+        color: white !important;
+         }
 `

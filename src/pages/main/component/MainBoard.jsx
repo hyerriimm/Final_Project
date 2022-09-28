@@ -33,7 +33,7 @@ if (isLoading) {
     return (
       <Stack>
         <Empty>•••🤔</Empty>
-        <div>게시물 없습니다.</div>
+        <div>등록된 게시물이 없습니다.</div>
         <div>모임을 만들어 주세요.</div>
       </Stack>
     );
@@ -114,6 +114,7 @@ const Empty = styled.h1`
 
 const Container = styled.div`
     display: flex;
+    margin-top: 20px;
     justify-content: center;
     /* background-color: antiquewhite; */
     /* border: 1px solid black; */
@@ -165,7 +166,7 @@ const CardWrapper = styled.div`
   cursor: pointer;
   :hover {
             filter: brightness(90%);
-            box-shadow: 1px 1px 3px 0 #bcd7ff;
+            /* box-shadow: 1px 1px 3px 0 #bcd7ff; */
   }
 `;
 
@@ -176,7 +177,7 @@ const ImageContainer = styled.div`
     img {
         display: flex;
         width: 100%;
-        height: 243px ;
+        height: 210px ;
         object-fit: cover;
         border-radius: 6px;
     }

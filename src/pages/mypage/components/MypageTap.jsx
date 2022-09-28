@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
-import { __parti } from '../../../redux/modules/partilist'
+import { __parti, __lead } from '../../../redux/modules/gatheringlist'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,48 +53,85 @@ export default function BasicTabs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const list = useSelector((state) => state.partilist.cardlist)
-  console.log(list)
+  const partilist = useSelector((state) => state.gatheringlist.partilist)
+  const leadlist = useSelector((state) => state.gatheringlist.leadlist)
 
-  useEffect(()=> {
+  useEffect(() => {
     dispatch(__parti());
   }, []);
 
-    return (
-        <Box sx={{ width: '90%', margin: 'auto' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="내가 만든 모임" {...a11yProps(0)} />
-                    <Tab label="내가 참여한 모임" {...a11yProps(1)} />
-                </Tabs>
-            </Box>
-            <TabPanel value={value} index={0}>
-                <Container>
-                    <ListContainer>
-                        {list?.map((list) => {
-                            return (
-                                <CardWrapper key={list.id} onClick={() => { navigate(`/detail/${list.id}`) }}>
-                                    <ImageContainer>
-                                        <img src={list.imgUrl} alt="" />
-                                    </ImageContainer>
-                                    <DescContainer>
-                                        <TitleWrapper>
-                                            <Title>{list.title}</Title>
-                                        </TitleWrapper>
-                                        <Address>{list.address}</Address>
-                                        <Dday>{list.dday}</Dday>
-                                    </DescContainer>
-                                </CardWrapper>
-                            );
-                        })}
-                    </ListContainer>
-                </Container>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
-        </Box>
-    );
+  useEffect(() => {
+    dispatch(__lead());
+  }, []);
+
+  return (
+    <Box sx={{ width: '90%', margin: 'auto' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label="내가 만든 모임" {...a11yProps(0)} />
+          <Tab label="내가 참여한 모임" {...a11yProps(1)} />
+        </Tabs>
+      </Box>
+      <TabPanel value={value} index={0}>
+        <Container>
+          <ListContainer>
+            {leadlist?.map((leadlist) => {
+              return (
+                <CardWrapper key={leadlist.postId} onClick={() => { navigate(`/detail/${leadlist.postId}`) }}>
+                  <ImageContainer>
+                    <img src={leadlist.imgUrl} alt="" />
+                  </ImageContainer>
+                  <DescContainer>
+                    <TitleWrapper>
+                      <Title>{leadlist.title}</Title>
+                      <RestDay>
+                        {leadlist.restDay.split("일")[0] <= 0 ? (
+                          <div style={{ color: '#e51e1e' }}>마감 완료</div>
+                        ) : (
+                          <div>마감 {leadlist.restDay}</div>
+                        )}
+                      </RestDay>
+                    </TitleWrapper>
+                    <Address>{leadlist.address}</Address>
+                    <Dday>{leadlist.dday}</Dday>
+                  </DescContainer>
+                </CardWrapper>
+              );
+            })}
+          </ListContainer>
+        </Container>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <Container>
+          <ListContainer>
+            {partilist?.map((partilist) => {
+              return (
+                <CardWrapper key={partilist.postId} onClick={() => { navigate(`/detail/${partilist.postId}`) }}>
+                  <ImageContainer>
+                    <img src={partilist.imgUrl} alt="" />
+                  </ImageContainer>
+                  <DescContainer>
+                    <TitleWrapper>
+                      <Title>{partilist.title}</Title>
+                      <RestDay>
+                        {partilist.restDay.split("일")[0] <= 0 ? (
+                          <div style={{ color: '#e51e1e' }}>마감 완료</div>
+                        ) : (
+                          <div>마감 {partilist.restDay}</div>
+                        )}
+                      </RestDay>
+                    </TitleWrapper>
+                    <Address>{partilist.address}</Address>
+                    <Dday>{partilist.dday}</Dday>
+                  </DescContainer>
+                </CardWrapper>
+              );
+            })}
+          </ListContainer>
+        </Container>
+      </TabPanel>
+    </Box>
+  );
 }
 
 const Container = styled.div`
@@ -121,7 +158,7 @@ const CardWrapper = styled.div`
   cursor: pointer;
   :hover {
             filter: brightness(90%);
-            box-shadow: 1px 1px 3px 0 #bcd7ff;
+            /* box-shadow: 1px 1px 3px 0 #bcd7ff; */
   }
 
 `;
@@ -133,7 +170,7 @@ const ImageContainer = styled.div`
     img {
         display: flex;
         width: 100px;
-        height: 120px;
+        height: 115px;
         object-fit: cover;
         border-radius: 4px;
     }
@@ -143,6 +180,7 @@ const DescContainer = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
+  margin-left: 10px;
   /* background-color: antiquewhite; */
   
 `;
@@ -155,12 +193,19 @@ const TitleWrapper = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   margin: 0 0 0 10px;
   font-family: 'NotoSansKR';
 `;
 
+const RestDay = styled.div`
+  font-size: 11px;
+  /* background-color: #f0f0f0; */
+  /* border-radius: 1px; */
+  color: #1E88E5;
+  margin: 0 15px 0 0
+`;
 
 const Address = styled.div`
   font-size: 13px;
