@@ -6,7 +6,7 @@ import Tab from "@mui/material/Tab";
 // import Typography from '@mui/material/Typography';
 import Box from "@mui/material/Box";
 import { useDispatch, useSelector } from "react-redux";
-import { __parti, __lead } from "../../../redux/modules/gatheringlist";
+import { __wait, __apply } from "../../../redux/modules/gatheringlist";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -53,17 +53,12 @@ export default function BasicTabs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const partilist = useSelector((state) => state.gatheringlist.partilist);
-  const leadlist = useSelector((state) => state.gatheringlist.leadlist);
-  const imgUrl = localStorage.getItem("ImgURL");
+  const waitlist = useSelector((state) => state.gatheringlist.waitlist);
+  const applylist = useSelector((state) => state.gatheringlist.applylist);
 
-  useEffect(() => {
-    dispatch(__parti());
-  }, []);
+  useEffect(() => { dispatch(__wait());}, []);
+  useEffect(() => { dispatch(__apply());}, []);
 
-  useEffect(() => {
-    dispatch(__lead());
-  }, []);
 
   return (
     <>
@@ -71,7 +66,7 @@ export default function BasicTabs() {
         <StDiv style={{ justifyContent: "flex-start" }}>
           <img
             alt="뒤로가기"
-            src={process.env.PUBLIC_URL + "/img/backspace.png"}
+            src={`${process.env.PUBLIC_URL}/img/backspace.png`}
             style={{ width: "25px", height: "25px", marginRight: "10px" }}
             onClick={() => navigate("/mypage")}
           />
@@ -94,39 +89,37 @@ export default function BasicTabs() {
           <TabPanel value={value} index={0}>
             <Container>
               <ListContainer>
-                {leadlist?.map((leadlist) => {
+                {waitlist?.map((waitlist, index) => {
                   return (
-                    <CardWrapper>
+                    <CardWrapper key={index}>
                       <DescContainer>
                         <TitleWrapper>
                           <Circle>
-                            <img src={imgUrl} />
+                            <img src={waitlist.imgUrl} alt="" />
                           </Circle>
                           <Title>
-                            {leadlist.nickname} 님이{" "}
+                            {waitlist.nickname} 님이{" "}
                             <div
                               style={{
                                 fontWeight: "600",
-                                width: "60px", //확인
+                                width: "50px",
                                 padding: "0 5px",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              {leadlist.title}
+                              {waitlist.title}
                             </div>{" "}
                             모임에 참여를 신청했습니다.
                           </Title>
                         </TitleWrapper>
                         <Btn>
                           <CheckButton
-                          // key={leadlist.postId}
-                          // onClick={() => {
-                          //   navigate(`/detail/${leadlist.postId}`);
-                          // }}
-
-                          // 바꿔야함
+                            key={waitlist.postId}
+                            onClick={() => {
+                              navigate(`/detail/${waitlist.postId}`);
+                            }}
                           >
                             신청 확인 하기
                           </CheckButton>
@@ -139,11 +132,45 @@ export default function BasicTabs() {
             </Container>
           </TabPanel>
 
+
           {/* 참여 신청 내역 탭*/}
           <TabPanel value={value} index={1}>
             <Container>
               <ListContainer>
-                <div>참여신청내역</div>
+                {applylist?.map((applylist) => {
+                  return (
+                    <CardWrapper key={applylist.postId}>
+                      {/* <ImageContainer>
+                        <img src={applylist.imgUrl} alt="" />
+                      </ImageContainer> */}
+                      <DescContainer>
+                        <TitleWrapper>
+                          <Title>
+                            <div
+                              style={{
+                                fontWeight: "600",
+                                width: "50px",
+                                padding: "0 5px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {applylist.title}
+                            </div>{" "}
+                            모임에 참여를 신청했습니다.
+                          </Title>
+                        </TitleWrapper>
+                        <Btn>
+                          <ChatButton
+                            key={applylist.postId}>
+                            채팅하러가기
+                          </ChatButton>
+                        </Btn>
+                      </DescContainer>
+                    </CardWrapper>
+                  );
+                })}
               </ListContainer>
             </Container>
           </TabPanel>
@@ -152,6 +179,7 @@ export default function BasicTabs() {
     </>
   );
 }
+
 
 
 const StDiv = styled.div`
@@ -198,6 +226,18 @@ const CardWrapper = styled.div`
   }
 `
 
+const ImageContainer = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  margin-right:5px;
+  img {
+    display: flex;
+    width: 100px;
+    height: 115px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+`
 
 const DescContainer = styled.div`
   display: flex;
@@ -242,6 +282,24 @@ const Btn = styled.div`
 `;
 
 const CheckButton = styled.button`
+  height: 40px;
+  width: 200px;
+  padding: 0 10px;
+  margin-top: px;
+  margin-bottom: 7px;
+  margin-right: 5px;
+  border: transparent;
+  border-radius: 5px;
+  outline: none;
+  background-color: #2196f3;
+  color: white;
+  cursor: pointer;
+  :hover {
+    filter: brightness(95%);
+  }
+`;
+
+const ChatButton = styled.button`
   height: 40px;
   width: 200px;
   padding: 0 10px;
