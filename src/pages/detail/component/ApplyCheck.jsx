@@ -1,17 +1,21 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
-import {__getApplication, __refuse, __accept } from '../../../redux/modules/application';
-import ModalOfApplyCheck from './ModalOfApplyCheck';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
+import {
+  __getApplication,
+  __refuse,
+  __accept,
+} from "../../../redux/modules/application";
+import ModalOfApplyCheck from "./ModalOfApplyCheck";
 
 const ApplyCheck = () => {
   const navigate = useNavigate();
   const params_id = useParams().id;
   const dispatch = useDispatch();
   const { applicants, detailTitle } = useSelector((state) => state.application);
-  console.log(applicants);
+  // console.log(applicants);
   // content 지원내용
   // applicationId 신청할 떄 들어가는 고유 아이디
   // postId
@@ -20,43 +24,107 @@ const ApplyCheck = () => {
   // state "WAIT" "APPROVED" "DENIED"
   // console.log(detailTitle);
 
-  // useState를 사용하여 open상태를 변경한다. (open일때 true로 만들어 열리는 방식)
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const openModal = () => {
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  
-  const onClickRefuseBtn = (nickname, applicationId) => {
-    if (window.confirm(`${nickname}님의 신청을 거절하시겠습니까?`)) {
-      dispatch(__refuse(applicationId));
-      setModalOpen(false);
-    }
-  };
-  
-  const onClickAcceptBtn = (nickname, applicationId) => {
-    if (window.confirm(`${nickname}님의 신청을 수락하시겠습니까?`)) {
-      dispatch(__accept(applicationId));
-      setModalOpen(false);
-    }
-  };
-
   useEffect(() => {
     dispatch(__getApplication(params_id));
   }, [applicants.length]);
-  
+
+  const onClickRefuseBtn = (nickname, applicationId) => {
+    if (window.confirm(`${nickname}님의 신청을 거절하시겠습니까?`)) {
+      dispatch(__refuse(applicationId));
+      // setModalOpen(false);
+    }
+  };
+
+  const onClickAcceptBtn = (nickname, applicationId) => {
+    if (window.confirm(`${nickname}님의 신청을 수락하시겠습니까?`)) {
+      dispatch(__accept(applicationId));
+      // setModalOpen(false);
+    }
+  };
+
+  const Cards = ({ eachApplicant }) => {
+    // useState를 사용하여 open상태를 변경한다. (open일때 true로 만들어 열리는 방식)
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const openModal = () => {
+      setModalOpen(true);
+    };
+    const closeModal = () => {
+      setModalOpen(false);
+    };
+
+    return (
+      <div>
+        {eachApplicant.state !== "WAIT" ? (
+          eachApplicant.state !== "APPROVED" ? (
+            <DENIEDCard onClick={openModal}>
+              <Body>
+                <ProfileImg src={eachApplicant.imgUrl} alt="profile" />
+                <StP>
+                  <span style={{ color: "#ff0000" }}>
+                    {eachApplicant.nickname}
+                  </span>{" "}
+                  님의 신청이 <span style={{ color: "#ff0000" }}>거절</span>
+                  되었습니다.
+                </StP>
+              </Body>
+            </DENIEDCard>
+          ) : (
+            <APPROVEDCard onClick={openModal}>
+              <Body>
+                <ProfileImg src={eachApplicant.imgUrl} alt="profile" />
+                <StP>
+                  <span>{eachApplicant.nickname}</span> 님의 신청이{" "}
+                  <span>승인</span>되었습니다.
+                </StP>
+              </Body>
+            </APPROVEDCard>
+          )
+        ) : (
+          <Card>
+            <Body>
+              <ProfileImg src={eachApplicant.imgUrl} alt="profile" />
+              <StP>
+                <span>{eachApplicant.nickname}</span> 님이{" "}
+                <span>{detailTitle}</span>
+                모임에 참여를 신청했습니다.
+              </StP>
+            </Body>
+            <BtnsDiv>
+              <StButton
+                onClick={openModal}
+                style={{ backgroundColor: "#2196F3" }}
+              >
+                지원내용 확인하기
+              </StButton>
+            </BtnsDiv>
+          </Card>
+        )}
+        <ModalOfApplyCheck
+          open={modalOpen}
+          close={closeModal}
+          header={`지원자 ${eachApplicant.nickname}`}
+          nickname={eachApplicant.nickname}
+          applicantStatus={eachApplicant.state}
+          applicationId={eachApplicant.applicationId}
+          onClickRefuseBtn={onClickRefuseBtn}
+          onClickAcceptBtn={onClickAcceptBtn}
+        >
+          {/* Modal.js의  <main> {props.children} </main>에 내용이 입력된다.  */}
+          {eachApplicant.content}
+        </ModalOfApplyCheck>
+      </div>
+    );
+  };
+
   return (
     <StContainer>
       <Item1>
         <StDiv>
           <img
-            alt='뒤로가기'
+            alt="뒤로가기"
             src={`${process.env.PUBLIC_URL}/img/backspace.png`}
-            style={{ width: '25px', height: '25px', marginRight: '10px' }}
+            style={{ width: "25px", height: "25px", marginRight: "10px" }}
             onClick={() => navigate(-1)}
           />
           <h3>지원 확인</h3>
@@ -65,62 +133,9 @@ const ApplyCheck = () => {
           <div>모임명</div>
           <div> {detailTitle} </div>
         </ApplyTitleDiv>
-        {applicants.map((eachApplicant) => {
-          return (
-            <div key={uuidv4()}>
-              { eachApplicant.state !== "WAIT" ? (
-                eachApplicant.state !== "APPROVED" ? (
-              <DENIEDCard>
-                <Body>
-                  <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
-                  <StP>
-                    <span style={{color:'#ff0000'}}>{eachApplicant.nickname}</span> 님의 신청이 <span style={{color:'#ff0000'}}>거절</span>되었습니다.
-                  </StP>
-                </Body>
-              </DENIEDCard>
-                ): (
-                <APPROVEDCard>
-                  <Body>
-                    <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
-                    <StP>
-                      <span>{eachApplicant.nickname}</span> 님의 신청이 <span>승인</span>되었습니다.
-                    </StP>
-                  </Body>
-                </APPROVEDCard>
-                )
-              ) : (
-                <Card>
-                <Body>
-                  <ProfileImg src={eachApplicant.imgUrl} alt='profile' />
-                  <StP>
-                    <span>{eachApplicant.nickname}</span> 님이  <span>{detailTitle}</span>
-                    모임에 참여를 신청했습니다.
-                  </StP>
-                </Body>
-                <BtnsDiv>
-                  <StButton
-                  style={{backgroundColor:'#2196F3'}}
-                  onClick={openModal}>
-                  지원내용 확인하기
-                  </StButton>
-                </BtnsDiv>
-                <ModalOfApplyCheck 
-                open={modalOpen} 
-                close={closeModal} 
-                header={`지원자 ${eachApplicant.nickname}`}
-                nickname={eachApplicant.nickname}
-                applicationId={eachApplicant.applicationId}
-                onClickRefuseBtn={onClickRefuseBtn}
-                onClickAcceptBtn={onClickAcceptBtn}
-                >
-                  {/* Modal.js의  <main> {props.children} </main>에 내용이 입력된다.  */}
-                  {eachApplicant.content}
-                </ModalOfApplyCheck>
-              </Card>
-              ) }
-            </div>
-          );
-        })}
+        {applicants.map((eachApplicant) => (
+          <Cards key={uuidv4()} eachApplicant={eachApplicant} />
+        ))}
       </Item1>
     </StContainer>
   );
@@ -134,7 +149,7 @@ const StContainer = styled.div`
   justify-content: center;
   padding: 10px;
   margin: 0 auto;
-  grid-template-areas: 'a';
+  grid-template-areas: "a";
 `;
 
 const Item1 = styled.div`
@@ -156,6 +171,9 @@ const StDiv = styled.div`
 `;
 
 const ApplyTitleDiv = styled.div`
+  max-width: 375px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   background-color: #d9d9d9;
   display: flex;
   flex-direction: column;
@@ -174,7 +192,7 @@ const ApplyTitleDiv = styled.div`
 
 const Card = styled.div`
   width: 100%;
-  height: 150px;
+  height: fit-content;
   border: 1px solid grey;
   display: flex;
   flex-direction: column;
@@ -200,9 +218,9 @@ const APPROVEDCard = styled.div`
 `;
 
 const Body = styled.div`
-box-sizing: border-box;
+  box-sizing: border-box;
   width: 375px;
-  height: 150px;
+  height: fit-content;
   padding: 0 10px;
   display: flex;
   align-items: center;
@@ -225,13 +243,13 @@ const ProfileImg = styled.img`
 `;
 
 const BtnsDiv = styled.div`
-box-sizing: border-box;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
 `;
 
 const StButton = styled.button`
-word-break: keep-all;
+  word-break: keep-all;
   height: 45px;
   width: 150px;
   margin: 0px 10px 20px 10px;
