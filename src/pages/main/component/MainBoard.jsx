@@ -47,13 +47,7 @@ if (isLoading) {
           return ( 
             <CardWrapper 
             key={list.id} 
-            onClick={() => {
-              if (list.restDay.split("일")[0] <= 0) {
-                alert('이미 마감된 모임입니다.')
-              } else {
-                navigate(`/detail/${list.id}`) 
-              }
-              }}>
+            onClick={() => navigate(`/detail/${list.id}`)}>
               <ImageContainer>
                 <img src={list.imgUrl} alt=""/>
               </ImageContainer>
@@ -61,8 +55,8 @@ if (isLoading) {
                 <TitleWrapper>
                 <Title>{list.title}</Title>
                 <RestDay>
-                {list.restDay.split("일")[0] <= 0 ? (
-                <p style={{ color: '#e51e1e'}}>마감 완료</p>
+                {list.restDay.split("일")[0] == 0 ? (
+                <p style={{ color: '#e51e1e'}}>오늘 마감</p>
                 ):(
                   <p>마감 {list.restDay}</p>
                 )}

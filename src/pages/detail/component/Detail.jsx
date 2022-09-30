@@ -116,8 +116,8 @@ const Detail = () => {
                   <h4 style={{width:'150px'}}>{detail.authorNickname}</h4>
                 </div>
                 <StDiv>
-                  {detail.restDay?.split("일")[0] <= 0 ? ( 
-                    <h4 style={{color:'#1E88E5'}}>마감 완료</h4>
+                  {detail.restDay?.split("일")[0] == 0 ? ( 
+                    <h4 style={{color:'#e51e1e'}}>오늘 마감</h4>
                   ):(
                     <RestDayBtn disable>마감 {detail.restDay}</RestDayBtn> 
                   )}
@@ -224,6 +224,7 @@ const Item1 = styled.div`
   display: flex;
   height: fit-content;
   /* max-height: 60vh; */
+  max-height: 600px;
   @media only screen and (max-width: 720px) {
     // 720보다 작을 때 나오는 화면
     flex-direction: column;
