@@ -122,35 +122,25 @@ const Container = styled.div`
 `
 
 const ListContainer = styled.div`
-    /* display: flex; */
-    /* margin: 10px 15px 20px 15px; */
-    /* border: 1px solid black; */
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 1255px;
+
+  @media only screen and (min-width: 854px) and (max-width: 1255px) {
+     display: flex;
+     flex-direction: row;
+     flex-wrap: wrap;
+     width: 825px;
+     /* background-color: #704d1e; */
+  }
 
   @media only screen and (max-width: 854px) {
     flex-direction: column;
     align-items: center;    
   }
-
-  @media only screen and (min-width: 854px) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 824px;
-    /* max-width: 1000px; */
-    /* justify-content: center; */
-  }
-
-  @media only screen and (min-width: 1240px) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 1240px;
-    /* max-width: 1000px; */
-    /* justify-content: center; */
-  }
-
-
 `
+
 
 const CardWrapper = styled.div`
   display: flex;
