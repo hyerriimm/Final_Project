@@ -4,9 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-
 import { __getMyInfo } from '../../../redux/modules/myinfo';
-import { Container } from '@mui/system';
 
 
 const InfoEdit = () => {
