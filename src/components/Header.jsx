@@ -64,8 +64,10 @@ const Header = () => {
                 { accesstoken ? 
                 ( <>
                   <AddBtn onClick={()=>navigate('/form')}>모임등록</AddBtn>
-                  <BtnProfile ref={modalRef} onClick={handleModal}>
-                      <img src={ profile } alt="profile"/>
+                  <BtnProfile 
+                  style={{backgroundSize:'cover',backgroundImage:`url(${profile})`}}
+                  ref={modalRef} onClick={handleModal}>
+                      {/* <img src={ profile } alt="profile"/> */}
                   </BtnProfile>
                   </>
                 )
@@ -167,12 +169,12 @@ const BtnProfile = styled.div`
             filter: brightness(110%);
          }          
 
-      img {
+      /* img {
           width: 100%;
           height: 100%;
           border-radius: 100%;
           object-fit: cover;
-      }
+      } */
 `
 
 const ModalBackdrop = styled.div`
