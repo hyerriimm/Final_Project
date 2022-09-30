@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { __getMyInfo } from '../../../redux/modules/myinfo';
+
 
 
 const MypageProfile = () => {
 
     const navigate = useNavigate();
-    const [profileImg,setProfileImg] = useState(undefined);
-    const [Id, setId] = useState(undefined);
-    const profile = `${profileImg}`
+    const dispatch = useDispatch();
+    const myinfo = useSelector((state)=> state.myinfo.myinfo);
 
     useEffect(()=>{
-        setProfileImg(localStorage.getItem("ImgURL"));
-        setId(localStorage.getItem("Id"));
-      });
+        window.scrollTo(0, 0); // 스크롤 맨 위로
+        dispatch(__getMyInfo());
+      },[])
+
+    
+    const profile = `${myinfo.imgUrl}`
     
     return (
         <>
@@ -23,8 +28,8 @@ const MypageProfile = () => {
                         <img src={ profile } alt="profile"/>
                     </Profile>
                     <DescWrapper>
-                        <StNickName>닉네임</StNickName>
-                        <StId>{ Id }</StId>
+                        <StNickName>{ myinfo.nickname }</StNickName>
+                        <StId>{ myinfo.userId }</StId>
                     </DescWrapper>
                 </ProfileWrapper>
                 <EditBtn onClick={() => { navigate('/mypage/infoedit')}}>계정수정</EditBtn>
