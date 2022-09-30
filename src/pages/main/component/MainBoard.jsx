@@ -47,13 +47,7 @@ if (isLoading) {
           return ( 
             <CardWrapper 
             key={list.id} 
-            onClick={() => {
-              if (list.restDay.split("일")[0] <= 0) {
-                alert('이미 마감된 모임입니다.')
-              } else {
-                navigate(`/detail/${list.id}`) 
-              }
-              }}>
+            onClick={() => navigate(`/detail/${list.id}`)}>
               <ImageContainer>
                 <img src={list.imgUrl} alt=""/>
               </ImageContainer>
@@ -61,8 +55,8 @@ if (isLoading) {
                 <TitleWrapper>
                 <Title>{list.title}</Title>
                 <RestDay>
-                {list.restDay.split("일")[0] <= 0 ? (
-                <p style={{ color: '#e51e1e'}}>마감 완료</p>
+                {list.restDay.split("일")[0] == 0 ? (
+                <p style={{ color: '#e51e1e'}}>오늘 마감</p>
                 ):(
                   <p>마감 {list.restDay}</p>
                 )}
@@ -154,6 +148,7 @@ const Container = styled.div`
 
 
 const ListContainer = styled.div`
+<<<<<<< HEAD
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -167,13 +162,31 @@ const ListContainer = styled.div`
     width: 825px;
     background-color: #704d1e;
     /* justify-content: center; */
+=======
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 1255px;
+
+  @media only screen and (min-width: 854px) and (max-width: 1255px) {
+     display: flex;
+     flex-direction: row;
+     flex-wrap: wrap;
+     width: 825px;
+     /* background-color: #704d1e; */
+>>>>>>> 478a0b2c219963e3893591c0915d717410158ce8
   }
 
   @media only screen and (max-width: 854px) {
     flex-direction: column;
     align-items: center;
   }
+<<<<<<< HEAD
 `;
+=======
+`
+>>>>>>> 478a0b2c219963e3893591c0915d717410158ce8
+
 
 const CardWrapper = styled.div`
   display: flex;
