@@ -10,7 +10,7 @@ export const __detail = createAsyncThunk(
     "detail/__detail", 
     async (payload, thunkAPI) => { 
         try {
-            const data = await axios.get(`http://13.125.229.126:8080/post/detail/${payload}`, {
+            const data = await axios.get(`http://13.125.229.126/post/detail/${payload}`, {
             headers: {
               authorization: localStorage.getItem("ACCESSTOKEN"),
               refreshtoken: localStorage.getItem("REFRESHTOKEN")
@@ -27,7 +27,7 @@ export const __detail = createAsyncThunk(
     "detail/__delete", 
     async (payload, thunkAPI) => { 
         try {
-            const data = await axios.delete(`http://13.125.229.126:8080/post/${payload}`, {
+            const data = await axios.delete(`http://13.125.229.126/post/${payload}`, {
               headers: {
                 authorization: localStorage.getItem("ACCESSTOKEN"),
                 refreshtoken: localStorage.getItem("REFRESHTOKEN")
@@ -48,7 +48,7 @@ export const __addWish = createAsyncThunk(
   "detail/__addWish", 
   async (payload, thunkAPI) => { 
       try {
-          const data = await axios.post(`http://13.125.229.126:8080/post/add/wish/${payload}`, payload, {
+          const data = await axios.post(`http://13.125.229.126/post/add/wish/${payload}`, payload, {
             headers: {
               authorization: localStorage.getItem("ACCESSTOKEN"),
               refreshtoken: localStorage.getItem("REFRESHTOKEN")
@@ -71,7 +71,7 @@ export const __removeWish = createAsyncThunk(
   "detail/__removeWish", 
   async (payload, thunkAPI) => { 
       try {
-          const data = await axios.post(`http://13.125.229.126:8080/post/remove/wish/${payload}`, payload, {
+          const data = await axios.post(`http://13.125.229.126/post/remove/wish/${payload}`, payload, {
             headers: {
               authorization: localStorage.getItem("ACCESSTOKEN"),
               refreshtoken: localStorage.getItem("REFRESHTOKEN")

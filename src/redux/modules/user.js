@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
 import { createSlice } from "@reduxjs/toolkit";
 
-const API_URL = 'http://13.125.229.126:8080';
+const API_URL = 'http://13.125.229.126';
 
 //회원가입
 export const signUp = createAsyncThunk(

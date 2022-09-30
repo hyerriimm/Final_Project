@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios'
 
-const API_URL = 'http://13.125.229.126:8080';
+const API_URL = 'http://13.125.229.126';
 
 //내활동 - 참여 대기중인 모임 조회
 export const __wait = createAsyncThunk(
@@ -20,6 +20,7 @@ export const __wait = createAsyncThunk(
     }
   }
 );
+
 
 //내활동 - 참여신청 내역 보기
 export const __apply = createAsyncThunk(

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://13.125.229.126:8080";
+const API_URL = "http://13.125.229.126";
 
 export const getPost = createAsyncThunk("comment", async (postId, thunkAPI) => {
   try {

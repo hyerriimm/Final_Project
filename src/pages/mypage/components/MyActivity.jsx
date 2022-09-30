@@ -10,6 +10,8 @@ import { __wait, __apply } from "../../../redux/modules/gatheringlist";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
+
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -55,9 +57,11 @@ export default function BasicTabs() {
 
   const waitlist = useSelector((state) => state.gatheringlist.waitlist);
   const applylist = useSelector((state) => state.gatheringlist.applylist);
+  // const { applicants } = useSelector((state) => state.application);
 
   useEffect(() => { dispatch(__wait());}, []);
   useEffect(() => { dispatch(__apply());}, []);
+
 
 
   return (
@@ -68,8 +72,7 @@ export default function BasicTabs() {
             alt="뒤로가기"
             src={`${process.env.PUBLIC_URL}/img/backspace.png`}
             style={{ width: "25px", height: "25px", marginRight: "10px" }}
-            onClick={() => navigate("/mypage")}
-          />
+            onClick={() => navigate("/mypage")}/>
           <h3>내 활동</h3>
         </StDiv>
 
@@ -78,12 +81,12 @@ export default function BasicTabs() {
             <Tabs
               value={value}
               onChange={handleChange}
-              aria-label="basic tabs example"
-            >
+              aria-label="basic tabs example">
               <Tab label="내 모임 관리" {...a11yProps(0)} />
               <Tab label="참여 신청 내역 보기" {...a11yProps(1)} />
             </Tabs>
           </Box>
+
 
           {/* 내 모임 관리 탭*/}
           <TabPanel value={value} index={0}>
@@ -96,31 +99,32 @@ export default function BasicTabs() {
                         <TitleWrapper>
                           <Circle>
                             <img src={waitlist.imgUrl} alt="" />
-                          </Circle>
-                          <Title>
-                            {waitlist.nickname} 님이{" "}
-                            <div
-                              style={{
-                                fontWeight: "600",
-                                width: "50px",
-                                padding: "0 5px",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {waitlist.title}
-                            </div>{" "}
-                            모임에 참여를 신청했습니다.
-                          </Title>
-                        </TitleWrapper>
-                        <Btn>
-                          <CheckButton
-                            key={waitlist.postId}
-                            onClick={() => {
-                              navigate(`/detail/${waitlist.postId}`);
-                            }}
-                          >
+                              </Circle>
+                                <Title>
+                                  <div
+                                    style={{
+                                      fontWeight: "600",
+                                      color: "#2196F3",}}>
+                                        {waitlist.nickname}
+                                          </div> 님이
+                                          <div
+                                            style={{
+                                              fontWeight: "600",
+                                              color: "#2196F3",
+                                              width: "50px",
+                                              padding: "0 5px",
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              whiteSpace: "nowrap", }}>
+                                            {waitlist.title}
+                                          </div> 모임 참여를 신청하였습니다.
+                                        </Title>
+                                      </TitleWrapper>
+                                    <Btn>
+                                 <CheckButton
+                                    key={waitlist.postId}
+                                    onClick={() => {
+                                    navigate(`/detail/${waitlist.postId}`);}}>
                             신청 확인 하기
                           </CheckButton>
                         </Btn>
@@ -133,6 +137,7 @@ export default function BasicTabs() {
           </TabPanel>
 
 
+
           {/* 참여 신청 내역 탭*/}
           <TabPanel value={value} index={1}>
             <Container>
@@ -140,34 +145,114 @@ export default function BasicTabs() {
                 {applylist?.map((applylist) => {
                   return (
                     <CardWrapper key={applylist.postId}>
-                      {/* <ImageContainer>
+                      <ImageContainer>
                         <img src={applylist.imgUrl} alt="" />
-                      </ImageContainer> */}
-                      <DescContainer>
-                        <TitleWrapper>
-                          <Title>
-                            <div
-                              style={{
-                                fontWeight: "600",
-                                width: "50px",
-                                padding: "0 5px",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
+                      </ImageContainer>
+                      <ItemContainer>
+                        {applylist.state === "DENIED" ? (
+                          <Div>
+                            <DDiv>
+                              <div
+                                style={{
+                                  fontWeight: "600",
+                                  color: "#ff0000",
+                                  width: "50px",
+                                  padding: "0 5px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {applylist.title}
+                              </div>
+                              모임 신청이
+                              <div
+                                style={{
+                                  color: "#ff0000",
+                                  fontWeight: "600",
+                                }}
+                              >
+                                거절
+                              </div>
+                              되었습니다.
+                            </DDiv>
+                            <p
+                              onClick={() => {
+                                navigate(`/`);
                               }}
+                              style={{ fontWeight: "600" }}
                             >
-                              {applylist.title}
-                            </div>{" "}
-                            모임에 참여를 신청했습니다.
-                          </Title>
-                        </TitleWrapper>
-                        <Btn>
-                          <ChatButton
-                            key={applylist.postId}>
-                            채팅하러가기
-                          </ChatButton>
-                        </Btn>
-                      </DescContainer>
+                              새로운 모임을 찾아보세요!
+                            </p>
+                          </Div>
+                        ) : applylist.state === "APPROVED" ? (
+                          <Div>
+                            <DDiv>
+                              <div
+                                style={{
+                                  fontWeight: "600",
+                                  color: "#2196F3",
+                                  width: "50px",
+                                  padding: "0 5px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {applylist.title}
+                              </div>
+                              모임 신청이
+                              <div
+                                style={{
+                                  color: "#2196F3",
+                                  fontWeight: "600",
+                                }}
+                              >
+                                승인
+                              </div>
+                              되었습니다.
+                            </DDiv>
+                            <ChatButton>채팅바로가기</ChatButton>
+                          </Div>
+                        ) : (
+                          <Div>
+                            <DDiv>
+                              <div
+                                style={{
+                                  fontWeight: "600",
+                                  width: "50px",
+                                  padding: "0 5px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {applylist.title}
+                              </div>
+                              모임 신청에
+                              <div
+                                style={{
+                                  fontWeight: "600",
+                                }}
+                              >
+                                신청
+                              </div>
+                              되었습니다.
+                            </DDiv>
+                            <ButtonDiv>
+                              <ConfirmButton
+                                key={applylist.postId}
+                                onClick={() => {
+                                  navigate(`/detail/${applylist.postId}`);
+                                }}
+                              >
+                                모임확인
+                              </ConfirmButton>
+                              <Cancelbutton>지원취소</Cancelbutton>
+                            </ButtonDiv>
+                          </Div>
+                        )}
+                      </ItemContainer>
                     </CardWrapper>
                   );
                 })}
@@ -190,7 +275,6 @@ const StDiv = styled.div`
   margin: 0 auto;
   margin-top: 70px;
 `
-
 
 const Stcontainer = styled.div`
   display: flex;
@@ -229,7 +313,6 @@ const CardWrapper = styled.div`
 const ImageContainer = styled.div`
   display: flex;
   box-sizing: border-box;
-  margin-right:5px;
   img {
     display: flex;
     width: 100px;
@@ -244,6 +327,17 @@ const DescContainer = styled.div`
   width: 100%;
   flex-direction: column;
 `
+
+const ItemContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  margin-top: 7px;
+  font-size: 13px;
+  font-family: "NotoSansKR";
+`;
 
 const TitleWrapper = styled.div`
   display: flex;
@@ -299,6 +393,42 @@ const CheckButton = styled.button`
   }
 `;
 
+const ConfirmButton = styled.button`
+  height: 40px;
+  width: 100px;
+  padding: 0 10px;
+  margin-top: px;
+  margin-bottom: 7px;
+  margin-right: 5px;
+  border: transparent;
+  border-radius: 5px;
+  outline: none;
+  background-color: #2196f3;
+  color: white;
+  cursor: pointer;
+  :hover {
+    filter: brightness(95%);
+  }
+`;
+
+const Cancelbutton = styled.button`
+  height: 40px;
+  width: 100px;
+  padding: 0 10px;
+  margin-top: px;
+  margin-bottom: 7px;
+  margin-right: 5px;
+  border: transparent;
+  border-radius: 5px;
+  outline: none;
+  background-color: #d9d9d9;
+  color: white;
+  cursor: pointer;
+  :hover {
+    filter: brightness(95%);
+  }
+`;
+
 const ChatButton = styled.button`
   height: 40px;
   width: 200px;
@@ -315,5 +445,23 @@ const ChatButton = styled.button`
   :hover {
     filter: brightness(95%);
   }
+`;
+
+const Div = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const DDiv = styled.div`
+  display: flex;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  width: 100%;
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 

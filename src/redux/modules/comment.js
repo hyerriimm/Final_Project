@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://13.125.229.126:8080";
+const API_URL = "http://13.125.229.126";
 
 //댓글 조회
 export const getComments = createAsyncThunk(

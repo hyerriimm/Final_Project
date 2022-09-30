@@ -6,7 +6,7 @@ export const __getApplication = createAsyncThunk(
     "application/__getApplication", 
     async (payload, thunkAPI) => { 
         try {
-            const data = await axios.get(`http://13.125.229.126:8080/post/application/${payload}`, {
+            const data = await axios.get(`http://13.125.229.126/post/application/${payload}`, {
             headers: {
                 authorization: localStorage.getItem("ACCESSTOKEN"),
                 refreshtoken: localStorage.getItem("REFRESHTOKEN")
@@ -23,7 +23,7 @@ export const __refuse = createAsyncThunk(
     "application/__refuse", 
     async (payload, thunkAPI) => { 
         try {
-            const data = await axios.post(`http://13.125.229.126:8080/post/application/disapprove/${payload}`, {applicationId: payload}, {
+            const data = await axios.post(`http://13.125.229.126/post/application/disapprove/${payload}`, {applicationId: payload}, {
             headers: {
                 authorization: localStorage.getItem("ACCESSTOKEN"),
                 refreshtoken: localStorage.getItem("REFRESHTOKEN")
@@ -48,7 +48,7 @@ export const __accept = createAsyncThunk(
     "application/__accept", 
     async (payload, thunkAPI) => { 
         try {
-            const data = await axios.post(`http://13.125.229.126:8080/post/application/approve/${payload}`, {applicationId: payload}, {
+            const data = await axios.post(`http://13.125.229.126/post/application/approve/${payload}`, {applicationId: payload}, {
             headers: {
                 authorization: localStorage.getItem("ACCESSTOKEN"),
                 refreshtoken: localStorage.getItem("REFRESHTOKEN")

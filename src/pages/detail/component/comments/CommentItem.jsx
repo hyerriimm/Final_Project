@@ -52,6 +52,8 @@ const CommentItem = ({ item, getCommentList }) => {
         comment: "test",
       })
     );
+    window.location.reload();
+
 
     getCommentList();
   };
@@ -61,6 +63,7 @@ const CommentItem = ({ item, getCommentList }) => {
 
     setComment(value);
   };
+ 
 
   return (
     <Item>
