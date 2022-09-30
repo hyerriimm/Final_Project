@@ -5,6 +5,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { FiTrash2 } from "react-icons/fi";
 import { FiEdit } from "react-icons/fi";
+import MapOfDetail from './MapOfDetail'
 
 import { __detail, __delete, __addWish, __removeWish } from '../../../redux/modules/detail';
 
@@ -131,13 +132,22 @@ const Detail = () => {
               <strong>모임 설명</strong>
               <div>{detail.content}</div>
               <br/>
-              <div><strong>모집 기간: </strong> {detail.startDate} ~ {detail.endDate} </div>
+              <strong>모집 기간</strong>
+              <div> {detail.startDate} ~ {detail.endDate}</div>
               <br/>
-              <div><strong>모집 인원: </strong> {detail.currentNum}/{detail.maxNum}</div>
+              <strong>모집 인원</strong> 
+              <div>{detail.currentNum}/{detail.maxNum}</div>
               <br/>
-              <div><strong>주소: </strong> {detail.address}</div>
+              {/* <div><strong>모임 일자: </strong> {detail.dday}</div> */}
+              <strong>모임 일자</strong> 
+              <div>{detail.dday}</div>
               <br/>
-              <div><strong>모임 일자: </strong> {detail.dday}</div>
+              <strong>모임 장소</strong> 
+              <div
+               style={{color:'#18A0FB', fontStyle:'oblique', cursor:'pointer', width:'fit-content'}} 
+               onClick={()=>window.open(detail.placeUrl, '_blank')}
+              >{detail.placeName}</div>
+              <div>( {detail.address} {detail.detailAddress} )</div>
             </div>
             <BtnsDiv>
               { logIn == null ? false : 
@@ -159,7 +169,15 @@ const Detail = () => {
             </BtnsDiv>
           </ContentAndBtns>
         </Item1>
-        <Item2Map>지도</Item2Map>
+        <Item2Map>
+          <MapOfDetail 
+          placeX={detail.placeX} 
+          placeY={detail.placeY} 
+          placeName={detail.placeName}
+          fullAddress={`${detail.address} ${detail.detailAddress}`}
+          placeUrl={detail.placeUrl}
+          />
+        </Item2Map>
       </Container>
     </div>
   );
@@ -332,7 +350,5 @@ object-fit: contain;
 const Item2Map = styled.div`
   grid-area: b;
   margin-top: 20px;
-  background-color: green;
-  background-image: url(https://www.website.co.kr/images/sub/tech_map_kakao.jpg);
-  background-size: cover;
+  width: 100%;
 `;

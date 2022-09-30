@@ -1,16 +1,15 @@
-import React, { useRef, useState, Component } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { DatePicker, RangeDatePicker } from '@y0c/react-datepicker';
 import '@y0c/react-datepicker/assets/styles/calendar.scss';
 import 'moment/locale/ko';
+import MapContainer from './MapContainer';
 
 const Form = () => {
   const navigate = useNavigate();
-
   const [title, setTitle] = useState("");
-  const [address, setAddress] = useState("아직 구현 못함");
   const [content, setContent] = useState("");
   const [maxNum, setMaxNum] = useState(""); 
   const [startDate, setStartDate] = useState('');
@@ -21,9 +20,23 @@ const Form = () => {
   const imgFileInputRef = useRef();
   const imgFileUploadBtnRef = useRef();
 
+  const [address, setAddress] = useState("주소를 선택해주세요");
+  const [detailAddress, setDetailAddress] = useState(undefined);
+  const [placeName, setPlaceName] = useState("");
+  const [placeUrl, setPlaceUrl] = useState(null);
+  const [placeX, setPlaceX] = useState("");
+  const [placeY, setPlaceY] = useState("");
+
+  const [inputText, setInputText] = useState("");
+  const [place, setPlace] = useState(" ");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setPlace(inputText);
+  };
+
   const resetAllStates = () => {
     setTitle('');
-    setAddress('');
     setContent('');
     setMaxNum('');
     setStartDate('');
@@ -31,6 +44,14 @@ const Form = () => {
     setDday('');
     setPreviewImg('');
     setImgFile(null);
+    setAddress('');
+    setDetailAddress('');
+    setPlaceName('');
+    setPlaceUrl('');
+    setPlaceX('');
+    setPlaceY('');
+    setInputText("");
+    setPlace(" ");
   };
 
   const onChangeImgFileInput = (e) => {
@@ -53,13 +74,18 @@ const Form = () => {
     }
     const formData = new FormData();
     formData.append('title', title);
-    formData.append('address', address);
     formData.append('content', content);
     formData.append('maxNum', Number(maxNum));
     formData.append('startDate', new Date(+startDate + 3240 * 10000).toISOString().split("T")[0]);
     formData.append('endDate', new Date(+endDate + 3240 * 10000).toISOString().split("T")[0]);
     formData.append('dDay', new Date(+dDay + 3240 * 10000).toISOString().split("T")[0]);
     formData.append('imgFile', imgFile);
+    formData.append('address', address);
+    formData.append('detailAddress', detailAddress);
+    formData.append('placeName', placeName);
+    formData.append('placeUrl', placeUrl);
+    formData.append('placeX', placeX);
+    formData.append('placeY', placeY);
 
     try {
       const ACCESSTOKEN = localStorage.getItem('ACCESSTOKEN');
@@ -90,7 +116,7 @@ const Form = () => {
 
   return (
     <StContainer>
-    <Item2Form onSubmit={onSubmitHandler}>
+    <Item2>
       <StDiv>
         <BackSpaceImg
           alt='뒤로가기'
@@ -195,19 +221,41 @@ const Form = () => {
         </div>
       </DatePickerDiv>
       <hr style={{width:'100%', marginTop:'15px'}}/>
-      <StButton type='button' style={{ backgroundColor: '#1E88E5' }}>
-        모임 장소 입력(address, 카카오맵)
-      </StButton>
-      <div 
-      style={{width:'100%', height:'200px', marginTop:'10px',
-      display:'flex', justifyContent:'center', alignItems:'center',
-      border:'1px solid grey'}}> 
-      지도가 나올 공간 
-      </div>
-      <StButton type='submit' style={{ backgroundColor: '#038E00' }}>
+      <AddressDiv>
+        <div style={{fontWeight:'bold'}}>모임 장소</div>
+        <div style={{marginTop:'10px',color:'#18a0fb'}}><strong>{placeName}</strong></div>
+        <div style={{margin:'10px 0',color:'#18a0fb'}}>{address}</div>
+        <form className="inputForm" onSubmit={handleSubmit}>
+          <input
+          placeholder='주소 찾기 (키워드, 도로명 주소, 지번 주소 입력 가능)'
+          onChange={(e)=>setInputText(e.target.value)}
+          value={inputText}
+          />
+          <button type="submit">검색</button>
+          <DetailAddressInput
+            name='detailAddress'
+            maxLength={30}
+            placeholder='(선택) 상세 주소를 입력해주세요.'
+            type='text'
+            value={detailAddress || ''}
+            onChange={(e) => setDetailAddress(e.target.value)}
+          />
+          <div style={{fontWeight:'bold', color:'grey', marginBottom:'10px'}}>※ 검색 후 지도의 핀을 눌러 선택해주세요.</div>
+        </form>
+        <MapContainer 
+        searchPlace={place} 
+        setAddress={setAddress}
+        setPlaceName={setPlaceName}
+        setPlaceUrl={setPlaceUrl}
+        setPlaceX={setPlaceX}
+        setPlaceY={setPlaceY}
+        />
+      </AddressDiv>
+      <StButton type='button' style={{ backgroundColor: '#038E00' }}
+      onClick={onSubmitHandler}>
         모임 등록하기
       </StButton>
-    </Item2Form>
+    </Item2>
     </StContainer>
   );
 };
@@ -224,7 +272,7 @@ const StContainer = styled.div`
     'a b b b c';
 `;
 
-const Item2Form = styled.form`
+const Item2 = styled.div`
   /* background-color: yellow; */
   grid-area: b;
   min-width: 375px;
@@ -293,7 +341,7 @@ font-family:'Noto Sans KR', sans-serif;
 
 const StImg = styled.img`
 min-width: 300px;
-max-width: 375px;
+max-width: 400px;
 /* min-height: 200px; */
 `;
 
@@ -317,6 +365,57 @@ display: flex;
 flex-direction: column;
 padding-left: 10px;
 margin-top: 10px;
+`;
+
+const AddressDiv = styled.div`
+display: flex;
+flex-direction: column;
+margin-top: 10px;
+div {
+  padding-left: 10px;
+}
+input {
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  min-height: 40px;
+  padding-left: 10px;
+  margin-bottom:10px;
+  width:87%;
+  height:35px;
+  :focus {
+      outline: none;
+      border-color: #18a0fb;
+      box-shadow: 0 0 3px #18a0fb;
+    }
+}
+button {
+  background-color: #18a0fb;
+  margin-left: 10px;
+  height: 40px;
+  color: white;
+  border: transparent;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  :hover {
+            filter: brightness(90%);
+            box-shadow: 1px 1px 3px 0 #bcd7ff;
+  }
+}
+`;
+
+const DetailAddressInput = styled.input`
+    box-sizing: border-box;
+    min-width: 100%;
+    min-height: 40px;
+    /* border: transparent; */
+    border: 1px solid #ddd;
+    padding-left: 10px;
+    :focus {
+      outline: none;
+      border-color: #18a0fb;
+      box-shadow: 0 0 3px #18a0fb;
+    }
 `;
 
 const StButton = styled.button`

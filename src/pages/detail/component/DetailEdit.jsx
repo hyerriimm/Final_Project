@@ -6,6 +6,7 @@ import axios from 'axios';
 import { DatePicker, RangeDatePicker } from '@y0c/react-datepicker';
 import '@y0c/react-datepicker/assets/styles/calendar.scss';
 import 'moment/locale/ko';
+import MapOfEdit from './MapOfEdit';
 
 import { __detail } from '../../../redux/modules/detail';
 
@@ -15,6 +16,7 @@ const DetailEdit = () => {
   const dispatch = useDispatch();
 
   const { detail } = useSelector((state)=> state.detail);
+  // console.log(detail);
   //   address 주소
 //   authorNickname 게시글 작성자 닉네임
 //   authorId 게시글 작성자 아이디
@@ -36,7 +38,6 @@ const DetailEdit = () => {
   },[])
 
   const [title, setTitle] = useState(detail.title);
-  const [address, setAddress] = useState(detail.address);
   const [content, setContent] = useState(detail.content);
   const [maxNum, setMaxNum] = useState(detail.maxNum); 
   const [startDate, setStartDate] = useState(detail.startDate);
@@ -47,9 +48,23 @@ const DetailEdit = () => {
   const imgFileInputRef = useRef();
   const imgFileUploadBtnRef = useRef();
 
+  const [address, setAddress] = useState(detail.address);
+  const [detailAddress, setDetailAddress] = useState(detail.detailAddress);
+  const [placeName, setPlaceName] = useState(detail.placeName);
+  const [placeUrl, setPlaceUrl] = useState(detail.placeUrl);
+  const [placeX, setPlaceX] = useState(detail.placeX);
+  const [placeY, setPlaceY] = useState(detail.placeY);
+
+  const [inputText, setInputText] = useState("");
+  const [place, setPlace] = useState(" ");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setPlace(inputText);
+  };
+
   const resetAllStates = () => {
     setTitle('');
-    setAddress('');
     setContent('');
     setMaxNum('');
     setStartDate('');
@@ -57,6 +72,14 @@ const DetailEdit = () => {
     setDday('');
     setPreviewImg('');
     setImgFile(null);
+    setAddress('');
+    setDetailAddress('');
+    setPlaceName('');
+    setPlaceUrl('');
+    setPlaceX('');
+    setPlaceY('');
+    setInputText("");
+    setPlace(" ");
   };
 
   const onChangeImgFileInput = (e) => {
@@ -79,12 +102,17 @@ const DetailEdit = () => {
     if (window.confirm('수정사항을 저장하시겠습니까?')) {
       const formData = new FormData();
       formData.append('title', title);
-      formData.append('address', address);
       formData.append('content', content);
       formData.append('maxNum', Number(maxNum));
       formData.append('startDate', startDate ===  detail.startDate ? detail.startDate : new Date(+startDate + 3240 * 10000).toISOString().split("T")[0] );
       formData.append('endDate', endDate === detail.endDate ? detail.endDate : new Date(+endDate + 3240 * 10000).toISOString().split("T")[0] );
       formData.append('dDay', dDay === detail.dday ? detail.dday : new Date(+dDay + 3240 * 10000).toISOString().split("T")[0] );
+      formData.append('address', address);
+      formData.append('detailAddress', detailAddress);
+      formData.append('placeName', placeName);
+      formData.append('placeUrl', placeUrl);
+      formData.append('placeX', placeX);
+      formData.append('placeY', placeY);
       if (imgFile!==null) {
         formData.append('ImgFile', imgFile);
       }
@@ -120,7 +148,7 @@ const DetailEdit = () => {
 
   return (
     <StContainer>
-    <Item2Form onSubmit={onEditHandler}>
+    <Item2>
       <StDiv>
         <BackSpaceImg
           alt='뒤로가기'
@@ -230,20 +258,43 @@ const DetailEdit = () => {
         </div>
       </DatePickerDiv>
       <hr style={{width:'100%', marginTop:'15px'}}/>
-      <StButton type='button' style={{ backgroundColor: '#1E88E5' }}>
-        모임 장소 입력(address, 카카오맵)
-      </StButton>
-      <div>현재 모임 장소: {address}</div>
-      <div 
-      style={{width:'100%', height:'200px', marginTop:'10px',
-      display:'flex', justifyContent:'center', alignItems:'center',
-      border:'1px solid grey'}}> 
-      지도가 나올 공간 
-      </div>
-      <StButton type='submit' style={{ backgroundColor: '#038E00' }}>
+      <AddressDiv>
+        <div style={{fontWeight:'bold'}}>모임 장소</div>
+        <div style={{marginTop:'10px',color:'#18a0fb'}}><strong>{placeName}</strong></div>
+        <div style={{margin:'10px 0',color:'#18a0fb'}}>{address} {detailAddress}</div>
+        <form className="inputForm" onSubmit={handleSubmit}>
+          <input
+          placeholder='주소 찾기 (키워드, 도로명 주소, 지번 주소 입력 가능)'
+          onChange={(e)=>setInputText(e.target.value)}
+          value={inputText}
+          />
+          <button type="submit">검색</button>
+          <DetailAddressInput
+            name='detailAddress'
+            maxLength={30}
+            placeholder='(선택) 상세 주소를 입력해주세요.'
+            type='text'
+            value={detailAddress || ''}
+            onChange={(e) => setDetailAddress(e.target.value)}
+          />
+          <div style={{fontWeight:'bold', color:'grey', marginBottom:'10px'}}>※ 검색 후 지도의 핀을 눌러 선택해주세요.</div>
+        </form>
+        <MapOfEdit 
+        searchPlace={place} 
+        setAddress={setAddress}
+        setPlaceName={setPlaceName}
+        setPlaceUrl={setPlaceUrl}
+        setPlaceX={setPlaceX}
+        setPlaceY={setPlaceY}
+        placeX={placeX}
+        placeY={placeY}
+        />
+      </AddressDiv>
+      <StButton type='button' style={{ backgroundColor: '#038E00' }}
+      onClick={onEditHandler}>
         수정하기
       </StButton>
-    </Item2Form>
+    </Item2>
     </StContainer>
   );
 };
@@ -260,7 +311,7 @@ const StContainer = styled.div`
     'a b b b c';
 `;
 
-const Item2Form = styled.form`
+const Item2 = styled.div`
   /* background-color: yellow; */
   grid-area: b;
   min-width: 375px;
@@ -353,6 +404,57 @@ display: flex;
 flex-direction: column;
 padding-left: 10px;
 margin-top: 10px;
+`;
+
+const AddressDiv = styled.div`
+display: flex;
+flex-direction: column;
+margin-top: 10px;
+div {
+  padding-left: 10px;
+}
+input {
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  min-height: 40px;
+  padding-left: 10px;
+  margin-bottom:10px;
+  width:87%;
+  height:35px;
+  :focus {
+      outline: none;
+      border-color: #18a0fb;
+      box-shadow: 0 0 3px #18a0fb;
+    }
+}
+button {
+  background-color: #18a0fb;
+  margin-left: 10px;
+  height: 40px;
+  color: white;
+  border: transparent;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  :hover {
+            filter: brightness(90%);
+            box-shadow: 1px 1px 3px 0 #bcd7ff;
+  }
+}
+`;
+
+const DetailAddressInput = styled.input`
+    box-sizing: border-box;
+    min-width: 100%;
+    min-height: 40px;
+    /* border: transparent; */
+    border: 1px solid #ddd;
+    padding-left: 10px;
+    :focus {
+      outline: none;
+      border-color: #18a0fb;
+      box-shadow: 0 0 3px #18a0fb;
+    }
 `;
 
 const StButton = styled.button`
