@@ -18,8 +18,6 @@ const InfoEdit = () => {
         dispatch(__getMyInfo())
       },[])
 
-    console.log(myinfo)
-
     const [imgFile, setImgFile] = useState(null);
     const [previewImg, setPreviewImg] = useState(myinfo.imgUrl);
     const [nickname, setNickname] = useState(myinfo.nickname);
@@ -42,7 +40,7 @@ const InfoEdit = () => {
           const formData = new FormData();
           formData.append('nickname', nickname);
           if (imgFile!==null) {
-            formData.append('ImgFile', imgFile);
+            formData.append('imgFile', imgFile);
           }
       
           try {
@@ -58,6 +56,10 @@ const InfoEdit = () => {
                 
             if (response.data.success === true) {
                 alert(response.data.data);
+                console.log(response)
+                localStorage.setItem("ACCESSTOKEN", response.headers.authorization);
+                localStorage.setItem("REFRESHTOKEN", response.headers.refreshtoken);
+                localStorage.setItem("ImgURL", response.headers.imgurl);
                 resetAllStates();
                 return navigate('/mypage');
             };
@@ -69,8 +71,6 @@ const InfoEdit = () => {
             console.log(error);
         }
         }
-        // navigate('/');
-        // resetAllStates();
       };
 
     const onChangeImgFileInput = (e) => {
