@@ -65,7 +65,7 @@ const Header = () => {
                 ( <>
                   <AddBtn onClick={()=>navigate('/form')}>모임등록</AddBtn>
                   <BtnProfile 
-                  style={{backgroundSize:'cover',backgroundImage:`url(${profile})`}}
+                  style={{backgroundSize:'cover',backgroundImage:`url(${profile})`, backgroundPosition: 'center'}}
                   ref={modalRef} onClick={handleModal}>
                       {/* <img src={ profile } alt="profile"/> */}
                   </BtnProfile>
