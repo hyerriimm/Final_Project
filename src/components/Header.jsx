@@ -50,7 +50,7 @@ const Header = () => {
         setProfileImg(localStorage.removeItem("ImgURL"));
         localStorage.removeItem("Id");
         alert('로그아웃 되었습니다.')
-        window.location.reload();
+        navigate('/')
       } else {
           console.log("로그인 유지");
       }
@@ -65,7 +65,7 @@ const Header = () => {
                 ( <>
                   <AddBtn onClick={()=>navigate('/form')}>모임등록</AddBtn>
                   <BtnProfile 
-                  style={{backgroundSize:'cover',backgroundImage:`url(${profile})`}}
+                  style={{backgroundSize:'cover',backgroundImage:`url(${profile})`, backgroundPosition: 'center'}}
                   ref={modalRef} onClick={handleModal}>
                       {/* <img src={ profile } alt="profile"/> */}
                   </BtnProfile>

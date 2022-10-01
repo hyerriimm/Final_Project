@@ -1,37 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { __getMyInfo } from '../../../redux/modules/myinfo';
+import { fontSize } from '@mui/system';
 
 
 const MypageProfile = () => {
 
     const navigate = useNavigate();
-    const [profileImg,setProfileImg] = useState(undefined);
-    const [Id, setId] = useState(undefined);
-    const profile = `${profileImg}`
+    const dispatch = useDispatch();
+    const myinfo = useSelector((state) => state.myinfo.myinfo);
 
-    useEffect(()=>{
-        setProfileImg(localStorage.getItem("ImgURL"));
-        setId(localStorage.getItem("Id"));
-      });
-    
+    console.log(myinfo)
+
+    useEffect(() => {
+        window.scrollTo(0, 0); // 스크롤 맨 위로
+        dispatch(__getMyInfo());
+    }, [])
+
+
+    const profile = `${myinfo.imgUrl}`
+
     return (
         <>
             <Container>
                 <ProfileWrapper>
-                    <Profile> 
-                        <img src={ profile } alt="profile"/>
+                    <Profile>
+                        <img src={profile} alt="profile" />
                     </Profile>
                     <DescWrapper>
-                        <StNickName>닉네임</StNickName>
-                        <StId>{ Id }</StId>
+                        <StNickName>{myinfo.nickname}</StNickName>
+                        <StId>{myinfo.userId}
+                            {myinfo.root == 'normal' ? (
+                                <Sttag style={{ fontSize: "10px" }}>일반계정</Sttag>
+                            ) : (
+                                <ImgKakao
+                                    src='img/kakao_login_small.png'
+                                    alt='카카오 로그인 버튼'>
+                                </ImgKakao>
+                            )}
+                        </StId>
                     </DescWrapper>
                 </ProfileWrapper>
-                <EditBtn onClick={() => { navigate('/mypage/infoedit')}}>계정수정</EditBtn>
+                <EditBtn onClick={() => { navigate('/mypage/infoedit') }}>계정수정</EditBtn>
             </Container>
             <BtnSet>
-                <Wish onClick={() => { navigate('/mypage/wish')}}>찜 목록</Wish>
-                <Activity onClick={() => { navigate('/mypage/activity')}}>내 활동</Activity>
+                <Wish onClick={() => { navigate('/mypage/wish') }}>찜 목록</Wish>
+                <Activity onClick={() => { navigate('/mypage/activity') }}>내 활동</Activity>
             </BtnSet>
         </>
     );
@@ -82,16 +98,38 @@ const StNickName = styled.div`
     font-size: 16px;
     font-weight: 600;
     font-family: 'NotoSansKR';
-    /* border: 1px solid black */
+    /* border: 1px solid black; */
 
 `
 
 const StId = styled.div`
+    display: flex;
+    margin-top: 5px;
     font-size: 13px;
-    font-family: 'NotoSansKR';
-    /* border: 1px solid black */
-
+    font-family: 'NotoSansKR';  
+    /* border: 1px solid black; */
 `
+
+const Sttag = styled.button`
+    border: transparent;
+    border-radius: 2px;
+    background-color: #f3f3f3;
+    padding: 0 5px;
+    margin: 0 5px;
+    margin-left: 10px;
+    /* margin-right: 10px; */
+    font-size: 8px;
+    font-weight: 300;
+    height: 15px;
+`;
+
+
+const ImgKakao = styled.img`
+    height: 15px;
+    margin: 0 5px;
+    margin-left: 10px;
+`;
+
 
 const EditBtn = styled.button`
     border-radius: 4px;
