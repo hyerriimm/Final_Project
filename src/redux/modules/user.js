@@ -18,7 +18,7 @@ export const signUp = createAsyncThunk(
             console.log(data.data);
             if(data.data.success === false)
               alert(data.data.error.message)
-              else alert(data.data.data)
+              else alert(`${data.data.data}\n로그인 후 이용바랍니다.`)
             return thunkAPI.fulfillWithValue(data.data);
         } catch (error) {
           return thunkAPI.rejectWithValue(error);
