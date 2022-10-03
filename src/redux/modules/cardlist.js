@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios'
 
-const API_URL = 'http://13.125.229.126:8080';
+const API_URL = 'http://13.209.47.67';
 
 //모임 카드 리스트
 export const __cardlist = createAsyncThunk(

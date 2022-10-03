@@ -21,7 +21,7 @@ const Kakao = () => {
 
   const kakaologin = async (_code) => {
     try {
-      const response = await axios.get(`http://13.125.229.126:8080/oauth/kakao?code=${_code}`); 
+      const response = await axios.get(`http://13.209.47.67/oauth/kakao?code=${_code}`); 
       //백엔드로 인가코드 보내고 우리 사이트 전용 토큰 발급받기
 
       localStorage.setItem('ACCESSTOKEN', response.headers.authorization);

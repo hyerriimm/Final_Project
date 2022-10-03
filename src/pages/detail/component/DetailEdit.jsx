@@ -120,7 +120,7 @@ const DetailEdit = () => {
       try {
         const ACCESSTOKEN = localStorage.getItem('ACCESSTOKEN');
         const REFRESHTOKEN = localStorage.getItem('REFRESHTOKEN');
-        const response = await axios.put(`http://13.125.229.126:8080/post/${detail.id}`, formData, {
+        const response = await axios.put(`http://13.209.47.67/post/${detail.id}`, formData, {
           headers: {
             "Content-Type":"multipart/form-data",
             "Authorization":ACCESSTOKEN,
